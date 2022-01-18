@@ -6,7 +6,7 @@
 2. Clone the project from GitHub:
 
 ```
-git clone --recursive -j8 https://github.com/wellgram/Telegram-iOS.git
+git clone --recursive -j8 https://github.com/Wellgram/Telegram-iOS.git
 ```
 
 3. Download Bazel 4.0.0
