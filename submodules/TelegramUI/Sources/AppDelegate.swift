@@ -1,3 +1,22 @@
+// MARK: Wellgram imports
+ import WGData
+ import WGStrings
+ //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import UIKit
 import SwiftSignalKit
 import Display
@@ -1382,6 +1401,24 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         self.resetBadge()
         
         self.maybeCheckForUpdates()
+        
+        // MARK: Wellgram fetch
+        Queue().async {
+            self.fetchGlobalNGSettings()
+        }
+
+        let _ = (self.context.get()
+        |> take(1)
+        |> deliverOnMainQueue).start(next: { context in
+            if let context = context {
+                Queue().async {
+                    let presentationData = context.context.sharedContext.currentPresentationData.with({ $0 })
+                    self.fetchNGUserSettings(context.context.account.peerId.id._internalGetInt64Value())
+                    self.fetchLocale(lang: presentationData.strings.baseLanguageCode)
+         }
+            }
+        })
+        //
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
@@ -2164,6 +2201,20 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         completionHandler()
     }
     
+    private func fetchNGUserSettings(_ userId: Int64) {
+             updateNGInfo(userId: userId)
+         }
+         ///抓取全局数据
+         private func fetchGlobalNGSettings() {
+             updateGlobalNGSettings()
+         }
+
+         private func fetchLocale(lang: String) {
+     //        #if !targetEnvironment(simulator)
+             downloadLocale(lang)
+     //        #endif
+         }
+
     private var lastCheckForUpdatesTimestamp: Double?
     private let currentCheckForUpdatesDisposable = MetaDisposable()
     

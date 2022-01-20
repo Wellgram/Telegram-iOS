@@ -19,6 +19,8 @@ swift_library(
         "//submodules/CryptoUtils:CryptoUtils",
         "//submodules/NetworkLogging:NetworkLogging",
         "//submodules/Reachability:Reachability",
+        "//Wellgram/WGStrings:WGStrings",
+        "//Wellgram/WGTranslate:WGTranslate",
     ],
     visibility = [
         "//visibility:public",

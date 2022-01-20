@@ -5,6 +5,10 @@ import TelegramApi
 import MtProtoKit
 
 
+// MARK: Wellgram Import
+import WGTranslate
+import WGStrings
+
 private func peerIdsFromUpdateGroups(_ groups: [UpdateGroup]) -> Set<PeerId> {
     var peerIds = Set<PeerId>()
     
@@ -2494,8 +2498,34 @@ func replayFinalState(
                                 }
                             }
                         }
+                        
+                        if !message.text.isEmpty {
+                            
+//                            let presentationData = context.sharedContext.currentPresentationData.with { $0 }
+//                            let locale = presentationData.strings.baseLanguageCode
+                            
+                            let _ = (gtranslate(message.text, "en")  |> deliverOnMainQueue).start(next: { translated in
+                                let newMessageText = message.text + "\n\n\(gTranslateSeparator)\n" + translated
+                                let _ = (postbox.transaction { transaction -> Void in
+                                    if case let .Id(id) = message.id {
+                                        transaction.updateMessage(id, update: { currentMessage in
+                                            var storeForwardInfo: StoreMessageForwardInfo?
+                                            if let forwardInfo = currentMessage.forwardInfo {
+                                                storeForwardInfo = StoreMessageForwardInfo(authorId: forwardInfo.author?.id, sourceId: forwardInfo.source?.id, sourceMessageId: forwardInfo.sourceMessageId, date: forwardInfo.date, authorSignature: forwardInfo.authorSignature, psaType: forwardInfo.psaType, flags: forwardInfo.flags)
+                                            }
+
+                                            return .update(StoreMessage(id: currentMessage.id, globallyUniqueId: currentMessage.globallyUniqueId, groupingKey: currentMessage.groupingKey, threadId:  currentMessage.threadId, timestamp: currentMessage.timestamp, flags: StoreMessageFlags(currentMessage.flags), tags: currentMessage.tags, globalTags: currentMessage.globalTags, localTags: currentMessage.localTags, forwardInfo: storeForwardInfo, authorId: currentMessage.author?.id, text: newMessageText, attributes: currentMessage.attributes, media: currentMessage.media))
+                                        })
+                                    }
+                                }).start()
+                            }, error: { _ in
+
+                            })
+//                            message = StoreMessage(id: message.id, globallyUniqueId: message.globallyUniqueId, groupingKey: message.groupingKey, threadId: message.threadId, timestamp: message.timestamp, flags: message.flags, tags: message.tags, globalTags: message.globalTags, localTags: message.localTags, forwardInfo: message.forwardInfo, authorId: message.authorId, text: "Good", attributes: message.attributes, media: message.media)
+                        }
                     }
                 }
+            
                 let _ = transaction.addMessages(messages, location: location)
                 if case .UpperHistoryBlock = location {
                     for message in messages {
