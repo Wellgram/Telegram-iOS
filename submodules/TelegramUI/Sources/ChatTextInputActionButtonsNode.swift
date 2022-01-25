@@ -19,10 +19,14 @@ final class ChatTextInputActionButtonsNode: ASDisplayNode {
     var sendButtonHasApplyIcon = false
     var animatingSendButton = false
     let expandMediaInputButton: HighlightableButtonNode
+    ///翻译按钮
+    let translateButton: HighlightTrackingButtonNode
     
     var sendButtonLongPressed: ((ASDisplayNode, ContextGesture) -> Void)?
     
     private var gestureRecognizer: ContextGesture?
+    ///翻译按钮响应事件
+    private var translateGestureRecognizer: ContextGesture?
     var sendButtonLongPressEnabled = false {
         didSet {
             self.gestureRecognizer?.isEnabled = self.sendButtonLongPressEnabled
@@ -49,6 +53,7 @@ final class ChatTextInputActionButtonsNode: ASDisplayNode {
         self.backgroundNode.clipsToBounds = true
         self.backdropNode = ChatMessageBubbleBackdrop()
         self.sendButton = HighlightTrackingButtonNode(pointerStyle: .lift)
+        self.translateButton = HighlightTrackingButtonNode(pointerStyle: .lift)
         
         self.expandMediaInputButton = HighlightableButtonNode(pointerStyle: .default)
         
@@ -87,6 +92,7 @@ final class ChatTextInputActionButtonsNode: ASDisplayNode {
             self.backgroundNode.addSubnode(self.backdropNode)
         }
         self.sendContainerNode.addSubnode(self.sendButton)
+        self.sendContainerNode.addSubnode(self.translateButton)
         self.addSubnode(self.expandMediaInputButton)
     }
     
@@ -104,6 +110,12 @@ final class ChatTextInputActionButtonsNode: ASDisplayNode {
                 strongSelf.sendButtonLongPressed?(strongSelf.sendContainerNode, recognizer)
             }
         }
+//        let translateGestureRecognizer = ContextGesture(target: nil, action: nil)
+//        self.translateGestureRecognizer = translateGestureRecognizer
+//        self.translateButton.view.addGestureRecognizer(translateGestureRecognizer)
+//        translateGestureRecognizer.activated = { [weak self] recognizer, _ in
+//
+//        }
         
         self.micButtonPointerInteraction = PointerInteraction(view: self.micButton, style: .circle)
     }
@@ -136,6 +148,7 @@ final class ChatTextInputActionButtonsNode: ASDisplayNode {
         self.micButton.layoutItems()
         
         transition.updateFrame(layer: self.sendButton.layer, frame: CGRect(origin: CGPoint(), size: size))
+//        transition.updateFrame(layer: self.translateButton, frame: CGRect)
         transition.updateFrame(node: self.sendContainerNode, frame: CGRect(origin: CGPoint(), size: size))
         
         let backgroundSize = CGSize(width: 33.0, height: 33.0)

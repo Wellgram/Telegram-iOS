@@ -1704,7 +1704,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {
                 return false
         }
     }
-    
+    ///更新ChatPresentationInterfaceState
     func updateChatPresentationInterfaceState(_ chatPresentationInterfaceState: ChatPresentationInterfaceState, transition: ContainedViewLayoutTransition, interactive: Bool, completion: @escaping (ContainedViewLayoutTransition) -> Void) {
         self.selectedMessages = chatPresentationInterfaceState.interfaceState.selectionState?.selectedIds
         

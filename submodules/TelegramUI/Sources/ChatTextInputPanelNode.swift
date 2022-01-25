@@ -94,6 +94,8 @@ private final class AccessoryItemIconButtonNode: HighlightTrackingButtonNode {
                 return (PresentationResourcesChat.chatInputTextFieldKeyboardImage(theme), nil, strings.VoiceOver_Keyboard, 1.0, UIEdgeInsets())
             case let .stickers(enabled):
                 return (PresentationResourcesChat.chatInputTextFieldStickersImage(theme), nil, strings.VoiceOver_Stickers, enabled ? 1.0 : 0.4, UIEdgeInsets())
+            case .translate:
+                return (PresentationResourcesChat.chatInputTextFieldTranslateImage(theme), nil, strings.VoiceOver_Keyboard, 1.0, UIEdgeInsets())
             case .inputButtons:
                 return (PresentationResourcesChat.chatInputTextFieldInputButtonsImage(theme), nil, strings.VoiceOver_BotKeyboard, 1.0, UIEdgeInsets())
             case .commands:
@@ -114,10 +116,10 @@ private final class AccessoryItemIconButtonNode: HighlightTrackingButtonNode {
                 return (PresentationResourcesChat.chatInputTextFieldScheduleImage(theme), nil, strings.VoiceOver_ScheduledMessages, 1.0, UIEdgeInsets())
         }
     }
-    
+    /// translate
     static func calculateWidth(item: ChatTextInputAccessoryItem, image: UIImage?, text: String?, strings: PresentationStrings) -> CGFloat {
         switch item {
-            case .keyboard, .stickers, .inputButtons, .silentPost, .commands, .scheduledMessages:
+        case .keyboard, .stickers, .translate, .inputButtons, .silentPost, .commands, .scheduledMessages:
                 return (image?.size.width ?? 0.0) + CGFloat(8.0)
             case let .messageAutoremoveTimeout(timeout):
                 var imageWidth = (image?.size.width ?? 0.0) + CGFloat(8.0)
@@ -1984,7 +1986,7 @@ class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDelegate {
             transition.updateFrame(node: self.counterTextNode, frame: counterFrame)
         }
     }
-    
+    // MARK: 文本输入框编辑，inputHasText输入内容有文本，hideMicButton隐藏，
     private func updateTextNodeText(animated: Bool) {
         var inputHasText = false
         var hideMicButton = false
@@ -2610,6 +2612,10 @@ class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDelegate {
                             self.interfaceInteraction?.displayRestrictedInfo(.stickers, .tooltip)
                         }
                     case .keyboard:
+                        self.interfaceInteraction?.updateInputModeAndDismissedButtonKeyboardMessageId({ state in
+                            return (.text, state.keyboardButtonsMessage?.id)
+                        })
+                    case .translate:
                         self.interfaceInteraction?.updateInputModeAndDismissedButtonKeyboardMessageId({ state in
                             return (.text, state.keyboardButtonsMessage?.id)
                         })

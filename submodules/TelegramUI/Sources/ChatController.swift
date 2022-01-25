@@ -8847,7 +8847,7 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
         }
         
         var navigationBarTransition = transition
-        self.chatDisplayNode.containerLayoutUpdated(layout, navigationBarHeight: self.navigationLayout(layout: layout).navigationFrame.maxY, transition: transition, listViewTransaction: { updateSizeAndInsets, additionalScrollDistance, scrollToTop, completion in
+        self.chatDisplayNode.containerLayoutUpdated(layout, navigationBarHeight: self.navigationLayout(layout: layout).navigationFrame.maxY, transition: transition, listViewTransaction: { updateSizeAndInsets, additionalScrollDistance, scrollToTop, completion in //更新stricker、keyboard布局
             self.chatDisplayNode.historyNode.updateLayout(transition: transition, updateSizeAndInsets: updateSizeAndInsets, additionalScrollDistance: additionalScrollDistance, scrollToTop: scrollToTop, completion: completion)
         }, updateExtraNavigationBarBackgroundHeight: { value, extraNavigationTransition in
             navigationBarTransition = extraNavigationTransition

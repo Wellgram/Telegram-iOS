@@ -4733,6 +4733,7 @@ Sorry for the inconvenience.";
 
 "VoiceOver.Keyboard" = "Keyboard";
 "VoiceOver.Stickers" = "Stickers";
+"VoiceOver.Translate" = "Translate";
 "VoiceOver.ScheduledMessages" = "Scheduled Messages";
 "VoiceOver.BotCommands" = "Bot Commands";
 "VoiceOver.BotKeyboard" = "Bot Keyboard";

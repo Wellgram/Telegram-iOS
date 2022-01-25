@@ -319,6 +319,9 @@ func inputTextPanelStateForChatPresentationInterfaceState(_ chatPresentationInte
                         accessoryItems.append(.inputButtons)
                     }
                 }
+                if accessoryItems.count == 0 {//如果有输入文本，则accessoryItems是空数组的，因此用数组的长度判断是否出现翻译按钮
+                    accessoryItems.append(.translate)
+                }
                 return ChatTextInputPanelState(accessoryItems: accessoryItems, contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
             }
     }

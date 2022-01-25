@@ -482,6 +482,15 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 }
                 if !availableSavedLocalizations.isEmpty {
                     entries.append(.localizationTitle(text: presentationData.strings.Localization_InterfaceLanguage.uppercased(), section: LanguageListSection.unofficial.rawValue))
+                    
+                    for info in niceLocalizations {
+                        if existingIds.contains(info.languageCode) {
+                            continue
+                        }
+                        existingIds.insert(info.languageCode)
+                        entries.append(.localization(index: entries.count, info: info, type: .unofficial, selected: info.languageCode == activeLanguageCode, activity: applyingCode == info.languageCode, revealed: revealedCode == info.languageCode, editing: isEditing))
+                    }
+                    
                     for info in availableSavedLocalizations {
                         if existingIds.contains(info.languageCode) {
                             continue

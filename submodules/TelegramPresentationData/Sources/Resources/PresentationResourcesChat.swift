@@ -618,6 +618,13 @@ public struct PresentationResourcesChat {
         })
     }
     
+    ///翻译按钮图片
+    public static func chatInputTextFieldTranslateImage(_ theme: PresentationTheme) -> UIImage? {
+        return theme.image(PresentationResourceKey.chatInputTextFieldKeyboardImage.rawValue, { theme in
+            return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Translate"), color: theme.chat.inputPanel.inputControlColor)
+        })
+    }
+    
     public static func chatInputTextFieldTimerImage(_ theme: PresentationTheme) -> UIImage? {
         return theme.image(PresentationResourceKey.chatInputTextFieldTimerImage.rawValue, { theme in
             if let image = generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Text/AccessoryIconTimer"), color: theme.chat.inputPanel.inputControlColor) {

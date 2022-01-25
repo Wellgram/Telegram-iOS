@@ -3,6 +3,7 @@ import Foundation
 enum ChatTextInputAccessoryItem: Equatable {
     case keyboard
     case stickers(Bool)
+    case translate
     case inputButtons
     case commands
     case silentPost(Bool)
