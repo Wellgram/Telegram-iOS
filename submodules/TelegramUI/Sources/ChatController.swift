@@ -6390,6 +6390,11 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
             }
             strongSelf.chatDisplayNode.openStickers()
             strongSelf.mediaRecordingModeTooltipController?.dismissImmediately()
+        }, showWgTranslate: { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.chatDisplayNode.showWgTranslate()
         }, editMessage: { [weak self] in
             if let strongSelf = self, let editMessage = strongSelf.presentationInterfaceState.interfaceState.editMessage {
                 var disableUrlPreview = false

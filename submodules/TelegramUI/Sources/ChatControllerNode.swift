@@ -17,6 +17,7 @@ import ConfettiEffect
 import WallpaperBackgroundNode
 import GridMessageSelectionNode
 import SparseItemGrid
+import WGTranslate
 
 final class VideoNavigationControllerDropContentItem: NavigationControllerDropContentItem {
     let itemNode: OverlayMediaItemNode
@@ -60,7 +61,7 @@ private struct ChatControllerNodeDerivedLayoutState {
     var upperInputPositionBound: CGFloat?
 }
 
-class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {
+class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDataSource, ASTableViewDelegate
     let context: AccountContext
     let chatLocation: ChatLocation
     let controllerInteraction: ChatControllerInteraction
@@ -2371,6 +2372,120 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {
                     return (.media(mode: .other, expanded: nil, focused: false), state.interfaceState.messageActionsState.closedButtonKeyboardMessageId)
                 })
             })
+        }
+    }
+    
+    var theTranslateNode: ASButtonNode!
+    var theLbTranslateBefore: ASTextNode!
+    var theLbTranslateAfter: ASTextNode!
+    
+//    var theLangTableView: UITableView!
+    
+    ///显示翻译框
+    func showWgTranslate() {
+        print("Translate Success")
+        
+        let width = self.frame.size.width
+        let height = self.frame.size.height
+        
+        if self.theTranslateNode != nil {
+            self.theLbTranslateBefore.attributedText = NSAttributedString(string: self.textInputPanelNode?.text ?? "", font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+            self.theTranslateNode.isHidden = false
+            return
+        }
+        
+        let translateNode = ASButtonNode()
+        translateNode.frame = self.frame
+        translateNode.addTarget(self, action: #selector(tapAction), forControlEvents: .touchUpInside)
+        self.addSubnode(translateNode)
+        self.theTranslateNode = translateNode
+        
+        let effect = UIBlurEffect(style: .light)
+        let effectView = UIVisualEffectView(effect: effect)
+        effectView.frame = self.frame
+        translateNode.view.addSubview(effectView)
+        
+        let translateAreaNode = ASDisplayNode()
+        translateAreaNode.frame = CGRect(x: (width - 300) / 2 , y: (height - 500) / 2, width: 300, height: 500)
+        translateAreaNode.backgroundColor = .white
+        translateNode.addSubnode(translateAreaNode)
+        
+        let lbTranslateBefore = ASTextNode()
+        lbTranslateBefore.frame = CGRect(x: 0, y: 0, width: 300, height: 180)
+        lbTranslateBefore.attributedText = NSAttributedString(string: self.textInputPanelNode?.text ?? "", font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+        translateAreaNode.addSubnode(lbTranslateBefore)
+        self.theLbTranslateBefore = lbTranslateBefore
+        
+        let btnSelectLang = ASButtonNode()
+        btnSelectLang.frame = CGRect(x: 0, y: 200, width: 150, height: 80)
+        btnSelectLang.backgroundColor = .yellow
+        btnSelectLang.setTitle("英语", with: .systemFont(ofSize: 15), with: .black, for: .normal)
+        btnSelectLang.addTarget(self, action: #selector(btnSelectLangAction), forControlEvents: .touchUpInside)
+        translateAreaNode.addSubnode(btnSelectLang)
+        
+        let btnTranslate = ASButtonNode()
+        btnTranslate.frame = CGRect(x: 150, y: 200, width: 150, height: 80)
+        btnTranslate.backgroundColor = .lightGray
+        btnTranslate.setTitle("翻译", with: .systemFont(ofSize: 15), with: .black, for: .normal)
+        btnTranslate.addTarget(self, action: #selector(btnTranslateAction), forControlEvents: .touchUpInside)
+        translateAreaNode.addSubnode(btnTranslate)
+        
+        let lbTranslateAfter = ASTextNode()
+        lbTranslateAfter.frame = CGRect(x: 0, y: 280, width: width, height: 180)
+        lbTranslateAfter.attributedText = NSAttributedString(string: "", font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+        translateAreaNode.addSubnode(lbTranslateAfter)
+        self.theLbTranslateAfter = lbTranslateAfter
+        
+        let btnSendTranslate = ASButtonNode()
+        btnSendTranslate.frame = CGRect(x: 0, y: 440, width: 300, height: 60)
+        btnSendTranslate.backgroundColor = .red
+        btnSendTranslate.setTitle("发送", with: .systemFont(ofSize: 15), with: .black, for: .normal)
+        btnSendTranslate.addTarget(self, action: #selector(btnSendTranslateAction), forControlEvents: .touchUpInside)
+        translateAreaNode.addSubnode(btnSendTranslate)
+        
+//        let langTableView = UITableView()
+//        langTableView.frame = CGRect(x: (width - 200) / 2, y: (height - 300) / 2, width: 200, height: 300)
+//        langTableView.delegate = self
+//        langTableView.dataSource = self
+//        translateAreaNode.view.addSubview(langTableView)
+        
+    }
+    
+//    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+//        return self.context.sharedContext.currentPresentationData
+//    }
+//
+//    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
+//
+//        return UITableViewCell()
+//    }
+    
+    @objc func tapAction() {
+        self.theTranslateNode.isHidden = true
+    }
+    
+    @objc func btnSelectLangAction() {
+//        self.context.sharedContext.presentationData
+    }
+    
+    @objc func btnTranslateAction() {
+        let text = self.theLbTranslateBefore.attributedText?.string ?? ""
+        let presentationData = self.context.sharedContext.currentPresentationData.with({ $0 })
+        let _ = (gtranslate(text, presentationData.strings.baseLanguageCode)  |> deliverOnMainQueue).start(next: { translated in
+//            self.textInputPanelNode?.text = translated
+            self.theLbTranslateAfter.attributedText = NSAttributedString(string: translated, font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+        }, error: { _ in
+
+        })
+    }
+    
+    @objc func btnSendTranslateAction() {
+        if self.theLbTranslateAfter.attributedText?.string.count ?? 0 > 0 {
+            self.theTranslateNode.isHidden = true
+            self.textInputPanelNode?.text = self.theLbTranslateAfter.attributedText?.string ?? ""
+            self.textInputPanelNode?.sendButtonPressed()
+        } else {
+            print("请输入内容")
         }
     }
     

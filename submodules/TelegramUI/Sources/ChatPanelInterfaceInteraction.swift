@@ -66,6 +66,7 @@ final class ChatPanelInterfaceInteraction {
     let updateTextInputStateAndMode: (@escaping (ChatTextInputState, ChatInputMode) -> (ChatTextInputState, ChatInputMode)) -> Void
     let updateInputModeAndDismissedButtonKeyboardMessageId: ((ChatPresentationInterfaceState) -> (ChatInputMode, MessageId?)) -> Void
     let openStickers: () -> Void
+    let showWgTranslate: () -> Void
     let editMessage: () -> Void
     let beginMessageSearch: (ChatSearchDomain, String) -> Void
     let dismissMessageSearch: () -> Void
@@ -157,6 +158,7 @@ final class ChatPanelInterfaceInteraction {
         updateTextInputStateAndMode: @escaping ((ChatTextInputState, ChatInputMode) -> (ChatTextInputState, ChatInputMode)) -> Void,
         updateInputModeAndDismissedButtonKeyboardMessageId: @escaping ((ChatPresentationInterfaceState) -> (ChatInputMode, MessageId?)) -> Void,
         openStickers: @escaping () -> Void,
+        showWgTranslate: @escaping () -> Void,
         editMessage: @escaping () -> Void,
         beginMessageSearch: @escaping (ChatSearchDomain, String) -> Void,
         dismissMessageSearch: @escaping () -> Void,
@@ -247,6 +249,7 @@ final class ChatPanelInterfaceInteraction {
         self.updateTextInputStateAndMode = updateTextInputStateAndMode
         self.updateInputModeAndDismissedButtonKeyboardMessageId = updateInputModeAndDismissedButtonKeyboardMessageId
         self.openStickers = openStickers
+        self.showWgTranslate = showWgTranslate
         self.editMessage = editMessage
         self.beginMessageSearch = beginMessageSearch
         self.dismissMessageSearch = dismissMessageSearch
@@ -342,6 +345,7 @@ final class ChatPanelInterfaceInteraction {
         }, presentForwardOptions: { _ in
         }, shareSelectedMessages: {
         }, updateTextInputStateAndMode: updateTextInputStateAndMode, updateInputModeAndDismissedButtonKeyboardMessageId: updateInputModeAndDismissedButtonKeyboardMessageId, openStickers: {
+        }, showWgTranslate: {
         }, editMessage: {
         }, beginMessageSearch: { _, _ in
         }, dismissMessageSearch: {

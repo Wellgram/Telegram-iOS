@@ -94,8 +94,8 @@ private final class AccessoryItemIconButtonNode: HighlightTrackingButtonNode {
                 return (PresentationResourcesChat.chatInputTextFieldKeyboardImage(theme), nil, strings.VoiceOver_Keyboard, 1.0, UIEdgeInsets())
             case let .stickers(enabled):
                 return (PresentationResourcesChat.chatInputTextFieldStickersImage(theme), nil, strings.VoiceOver_Stickers, enabled ? 1.0 : 0.4, UIEdgeInsets())
-            case .translate:
-                return (PresentationResourcesChat.chatInputTextFieldTranslateImage(theme), nil, strings.VoiceOver_Keyboard, 1.0, UIEdgeInsets())
+            case .wgTranslate:
+                return (PresentationResourcesChat.chatInputTextFieldTranslateImage(theme), nil, strings.VoiceOver_Translate, 1.0, UIEdgeInsets())
             case .inputButtons:
                 return (PresentationResourcesChat.chatInputTextFieldInputButtonsImage(theme), nil, strings.VoiceOver_BotKeyboard, 1.0, UIEdgeInsets())
             case .commands:
@@ -119,7 +119,7 @@ private final class AccessoryItemIconButtonNode: HighlightTrackingButtonNode {
     /// translate
     static func calculateWidth(item: ChatTextInputAccessoryItem, image: UIImage?, text: String?, strings: PresentationStrings) -> CGFloat {
         switch item {
-        case .keyboard, .stickers, .translate, .inputButtons, .silentPost, .commands, .scheduledMessages:
+        case .keyboard, .stickers, .wgTranslate, .inputButtons, .silentPost, .commands, .scheduledMessages:
                 return (image?.size.width ?? 0.0) + CGFloat(8.0)
             case let .messageAutoremoveTimeout(timeout):
                 var imageWidth = (image?.size.width ?? 0.0) + CGFloat(8.0)
@@ -2517,6 +2517,21 @@ class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDelegate {
     
         self.sendMessage()
     }
+    ///翻译发送按钮
+    @objc func translateButtonPressed() {
+        if let textInputNode = self.textInputNode, let presentationInterfaceState = self.presentationInterfaceState, let editMessage = presentationInterfaceState.interfaceState.editMessage, let inputTextMaxLength = editMessage.inputTextMaxLength {
+            let textCount = Int32(textInputNode.textView.text.count)
+            let remainingCount = inputTextMaxLength - textCount
+
+            if remainingCount < 0 {
+                textInputNode.layer.addShakeAnimation()
+                self.hapticFeedback.error()
+                return
+            }
+        }
+    
+        self.sendMessage()
+    }
     
     @objc func sendAsAvatarButtonPressed() {
         self.interfaceInteraction?.openSendAsPeer(self.sendAsAvatarReferenceNode, nil)
@@ -2615,10 +2630,8 @@ class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDelegate {
                         self.interfaceInteraction?.updateInputModeAndDismissedButtonKeyboardMessageId({ state in
                             return (.text, state.keyboardButtonsMessage?.id)
                         })
-                    case .translate:
-                        self.interfaceInteraction?.updateInputModeAndDismissedButtonKeyboardMessageId({ state in
-                            return (.text, state.keyboardButtonsMessage?.id)
-                        })
+                    case .wgTranslate:
+                        self.interfaceInteraction?.showWgTranslate()
                     case .inputButtons:
                         self.interfaceInteraction?.updateInputModeAndDismissedButtonKeyboardMessageId({ state in
                             return (.inputButtons, nil)

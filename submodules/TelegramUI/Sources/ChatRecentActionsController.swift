@@ -76,6 +76,7 @@ final class ChatRecentActionsController: TelegramBaseController {
         }, updateTextInputStateAndMode: { _ in
         }, updateInputModeAndDismissedButtonKeyboardMessageId: { _ in
         }, openStickers: {
+        }, showWgTranslate: {
         }, editMessage: {
         }, beginMessageSearch: { _, _ in
         }, dismissMessageSearch: {

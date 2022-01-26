@@ -218,6 +218,7 @@ final class PeerSelectionControllerNode: ASDisplayNode {
                 })
             }
         }, openStickers: {
+        }, showWgTranslate: {
         }, editMessage: {
         }, beginMessageSearch: { _, _ in
         }, dismissMessageSearch: {
