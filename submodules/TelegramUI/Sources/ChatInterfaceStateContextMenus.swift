@@ -1226,17 +1226,17 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
              let locale = presentationData.strings.baseLanguageCode
 
              // Copyforward
-             if data.messageActions.options.contains(.forward) {
-                 actions.append(.action(ContextMenuActionItem(text: l("Chat.ForwardAsCopy", chatPresentationInterfaceState.strings.baseLanguageCode), icon: { theme in
-                     return generateTintedImage(image: UIImage(bundleImageName: "CopyForward"), color: theme.actionSheet.primaryTextColor)
-                 }, action: { _, f in
-//                         interfaceInteraction.copyForwardMessages(selectAll ? messages : [message])
-                     f(.dismissWithoutContent)
-                 })))
-             }
+//             if data.messageActions.options.contains(.forward) {
+//                 actions.append(.action(ContextMenuActionItem(text: l("Chat.ForwardAsCopy", chatPresentationInterfaceState.strings.baseLanguageCode), icon: { theme in
+//                     return generateTintedImage(image: UIImage(bundleImageName: "CopyForward"), color: theme.actionSheet.primaryTextColor)
+//                 }, action: { _, f in
+////                         interfaceInteraction.copyForwardMessages(selectAll ? messages : [message])
+//                     f(.dismissWithoutContent)
+//                 })))
+//             }
 
              // Translate
-             if !message.text.isEmpty {
+             if !message.text.isEmpty && translationSettings.showWgHandTranslate {
                  var title = l("Messages.Translate", locale)
                  var mode = "translate"
                  if message.text.contains(gTranslateSeparator) {

@@ -61,6 +61,11 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "Unavailable in Nicegram due to AppStore Guidelines";
 
+/*WGStrings*/
+"WGStrings.AutoTranslate" = "Auto translate for chat";
+"WGStrings.HandTranslate" = "Manual translation for message";
+"WGStrings.SendTranslate" = "show translation when messaging";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "Please, Use «%1» to configure default browser";

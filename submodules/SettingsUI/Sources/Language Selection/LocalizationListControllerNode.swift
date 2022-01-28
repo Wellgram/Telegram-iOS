@@ -17,10 +17,16 @@ import UndoUI
 import TelegramUIPreferences
 import Translate
 
+// MARK: Wellgram Import
+import WGStrings
+
 private enum LanguageListSection: ItemListSectionId {
     case translate
     case official
     case unofficial
+    case wgAutoTranslate
+    case wgHandTranslate
+    case wgSendTranslate
 }
 
 private enum LanguageListEntryId: Hashable {
@@ -40,6 +46,9 @@ private enum LanguageListEntry: Comparable, Identifiable {
     case translate(text: String, value: Bool)
     case doNotTranslate(text: String, value: String)
     case translateInfo(text: String)
+    case wgAutoTranslate(text: String, value: Bool)
+    case wgHandTranslate(text: String, value: Bool)
+    case wgSendTranslate(text: String, value: Bool)
     
     case localizationTitle(text: String, section: ItemListSectionId)
     case localization(index: Int, info: LocalizationInfo?, type: LanguageListEntryType, selected: Bool, activity: Bool, revealed: Bool, editing: Bool)
@@ -54,6 +63,12 @@ private enum LanguageListEntry: Comparable, Identifiable {
                 return .translate(2)
             case .translateInfo:
                 return .translate(3)
+            case .wgAutoTranslate:
+                return .translate(4)
+            case .wgHandTranslate:
+                return .translate(5)
+            case .wgSendTranslate:
+                return .translate(6)
             case .localizationTitle:
                 return .localizationTitle
             case let .localization(index, info, _, _, _, _, _):
@@ -71,6 +86,12 @@ private enum LanguageListEntry: Comparable, Identifiable {
                 return 2
             case .translateInfo:
                 return 3
+            case .wgAutoTranslate:
+                return 4
+            case .wgHandTranslate:
+                return 5
+            case .wgSendTranslate:
+                return 6
             case .localizationTitle:
                 return 1000
             case let .localization(index, _, _, _, _, _, _):
@@ -82,7 +103,7 @@ private enum LanguageListEntry: Comparable, Identifiable {
        return lhs.index() < rhs.index()
     }
     
-    func item(presentationData: PresentationData, searchMode: Bool, openSearch: @escaping () -> Void, toggleShowTranslate: @escaping (Bool) -> Void, openDoNotTranslate: @escaping () -> Void, selectLocalization: @escaping (LocalizationInfo) -> Void, setItemWithRevealedOptions: @escaping (String?, String?) -> Void, removeItem: @escaping (String) -> Void) -> ListViewItem {
+    func item(presentationData: PresentationData, searchMode: Bool, openSearch: @escaping () -> Void, toggleShowTranslate: @escaping (Bool) -> Void, openDoNotTranslate: @escaping () -> Void, toggleShowWgAutoTranslate: @escaping (Bool) -> Void, toggleShowWgHandTranslate: @escaping (Bool) -> Void, toggleShowWgSendTranslate: @escaping (Bool) -> Void, selectLocalization: @escaping (LocalizationInfo) -> Void, setItemWithRevealedOptions: @escaping (String?, String?) -> Void, removeItem: @escaping (String) -> Void) -> ListViewItem {
         switch self {
             case let .translateTitle(text):
                 return ItemListSectionHeaderItem(presentationData: ItemListPresentationData(presentationData), text: text, sectionId: LanguageListSection.translate.rawValue)
@@ -96,6 +117,18 @@ private enum LanguageListEntry: Comparable, Identifiable {
                 })
             case let .translateInfo(text):
                 return ItemListTextItem(presentationData: ItemListPresentationData(presentationData), text: .plain(text), sectionId: LanguageListSection.translate.rawValue)
+        case let .wgAutoTranslate(text, value):
+            return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
+                toggleShowWgAutoTranslate(value)
+            })
+        case let .wgHandTranslate(text, value):
+            return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
+                toggleShowWgHandTranslate(value)
+            })
+        case let .wgSendTranslate(text, value):
+            return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
+                toggleShowWgSendTranslate(value)
+            })
             case let .localizationTitle(text, section):
                 return ItemListSectionHeaderItem(presentationData: ItemListPresentationData(presentationData), text: text, sectionId: section)
             case let .localization(_, info, type, selected, activity, revealed, editing):
@@ -119,8 +152,8 @@ private func preparedLanguageListSearchContainerTransition(presentationData: Pre
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries, allUpdated: forceUpdate)
     
     let deletions = deleteIndices.map { ListViewDeleteItem(index: $0, directionHint: nil) }
-    let insertions = indicesAndItems.map { ListViewInsertItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: true, openSearch: {}, toggleShowTranslate: { _ in }, openDoNotTranslate: {}, selectLocalization: selectLocalization, setItemWithRevealedOptions: { _, _ in }, removeItem: { _ in }), directionHint: nil) }
-    let updates = updateIndices.map { ListViewUpdateItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: true, openSearch: {}, toggleShowTranslate: { _ in }, openDoNotTranslate: {}, selectLocalization: selectLocalization, setItemWithRevealedOptions: { _, _ in }, removeItem: { _ in }), directionHint: nil) }
+    let insertions = indicesAndItems.map { ListViewInsertItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: true, openSearch: {}, toggleShowTranslate: { _ in }, openDoNotTranslate: {}, toggleShowWgAutoTranslate: { _ in }, toggleShowWgHandTranslate: { _ in }, toggleShowWgSendTranslate: { _ in }, selectLocalization: selectLocalization, setItemWithRevealedOptions: { _, _ in }, removeItem: { _ in }), directionHint: nil) }
+    let updates = updateIndices.map { ListViewUpdateItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: true, openSearch: {}, toggleShowTranslate: { _ in }, openDoNotTranslate: {}, toggleShowWgAutoTranslate: { _ in }, toggleShowWgHandTranslate: { _ in }, toggleShowWgSendTranslate: { _ in }, selectLocalization: selectLocalization, setItemWithRevealedOptions: { _, _ in }, removeItem: { _ in }), directionHint: nil) }
     
     return LocalizationListSearchContainerTransition(deletions: deletions, insertions: insertions, updates: updates, isSearching: isSearching)
 }
@@ -307,12 +340,12 @@ private struct LanguageListNodeTransition {
     let crossfade: Bool
 }
 
-private func preparedLanguageListNodeTransition(presentationData: PresentationData, from fromEntries: [LanguageListEntry], to toEntries: [LanguageListEntry], openSearch: @escaping () -> Void, toggleShowTranslate: @escaping (Bool) -> Void, openDoNotTranslate: @escaping () -> Void, selectLocalization: @escaping (LocalizationInfo) -> Void, setItemWithRevealedOptions: @escaping (String?, String?) -> Void, removeItem: @escaping (String) -> Void, firstTime: Bool, isLoading: Bool, forceUpdate: Bool, animated: Bool, crossfade: Bool) -> LanguageListNodeTransition {
+private func preparedLanguageListNodeTransition(presentationData: PresentationData, from fromEntries: [LanguageListEntry], to toEntries: [LanguageListEntry], openSearch: @escaping () -> Void, toggleShowTranslate: @escaping (Bool) -> Void, openDoNotTranslate: @escaping () -> Void, toggleShowWgAutoTranslate: @escaping (Bool) -> Void, toggleShowWgHandTranslate: @escaping (Bool) -> Void, toggleShowWgSendTranslate: @escaping (Bool) -> Void, selectLocalization: @escaping (LocalizationInfo) -> Void, setItemWithRevealedOptions: @escaping (String?, String?) -> Void, removeItem: @escaping (String) -> Void, firstTime: Bool, isLoading: Bool, forceUpdate: Bool, animated: Bool, crossfade: Bool) -> LanguageListNodeTransition {
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries, allUpdated: forceUpdate)
     
     let deletions = deleteIndices.map { ListViewDeleteItem(index: $0, directionHint: nil) }
-    let insertions = indicesAndItems.map { ListViewInsertItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: false, openSearch: openSearch, toggleShowTranslate: toggleShowTranslate, openDoNotTranslate: openDoNotTranslate, selectLocalization: selectLocalization, setItemWithRevealedOptions: setItemWithRevealedOptions, removeItem: removeItem), directionHint: nil) }
-    let updates = updateIndices.map { ListViewUpdateItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: false, openSearch: openSearch, toggleShowTranslate: toggleShowTranslate, openDoNotTranslate: openDoNotTranslate, selectLocalization: selectLocalization, setItemWithRevealedOptions: setItemWithRevealedOptions, removeItem: removeItem), directionHint: nil) }
+    let insertions = indicesAndItems.map { ListViewInsertItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: false, openSearch: openSearch, toggleShowTranslate: toggleShowTranslate, openDoNotTranslate: openDoNotTranslate, toggleShowWgAutoTranslate: toggleShowWgAutoTranslate, toggleShowWgHandTranslate: toggleShowWgHandTranslate, toggleShowWgSendTranslate: toggleShowWgSendTranslate, selectLocalization: selectLocalization, setItemWithRevealedOptions: setItemWithRevealedOptions, removeItem: removeItem), directionHint: nil) }
+    let updates = updateIndices.map { ListViewUpdateItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(presentationData: presentationData, searchMode: false, openSearch: openSearch, toggleShowTranslate: toggleShowTranslate, openDoNotTranslate: openDoNotTranslate, toggleShowWgAutoTranslate: toggleShowWgAutoTranslate, toggleShowWgHandTranslate: toggleShowWgHandTranslate, toggleShowWgSendTranslate: toggleShowWgSendTranslate, selectLocalization: selectLocalization, setItemWithRevealedOptions: setItemWithRevealedOptions, removeItem: removeItem), directionHint: nil) }
     
     return LanguageListNodeTransition(deletions: deletions, insertions: insertions, updates: updates, firstTime: firstTime, isLoading: isLoading, animated: animated, crossfade: crossfade)
 }
@@ -432,47 +465,65 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
             }
             var existingIds = Set<String>()
             
-            var showTranslate = true
-            var ignoredLanguages: [String] = []
+            // 开关
+            var showWgAutoTranslate = true
+            var showWgHandTranslate = true
+            var showWgSendTranslate = true
             if let translationSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) {
-                showTranslate = translationSettings.showTranslate
-                if let languages = translationSettings.ignoredLanguages {
-                    ignoredLanguages = languages
-                } else {
-                    if let activeLanguageCode = activeLanguageCode, supportedTranslationLanguages.contains(activeLanguageCode) {
-                        ignoredLanguages = [activeLanguageCode]
-                    }
-                }
-            } else {
-                if let activeLanguageCode = activeLanguageCode, supportedTranslationLanguages.contains(activeLanguageCode) {
-                    ignoredLanguages = [activeLanguageCode]
-                }
+                showWgAutoTranslate = translationSettings.showWgAutoTranslate
+                showWgHandTranslate = translationSettings.showWgHandTranslate
+                showWgSendTranslate = translationSettings.showWgSendTranslate
             }
+            
+//            var showTranslate = true
+//            var ignoredLanguages: [String] = []
+//            if let translationSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) {
+//                showTranslate = translationSettings.showTranslate
+//                if let languages = translationSettings.ignoredLanguages {
+//                    ignoredLanguages = languages
+//                } else {
+//                    if let activeLanguageCode = activeLanguageCode, supportedTranslationLanguages.contains(activeLanguageCode) {
+//                        ignoredLanguages = [activeLanguageCode]
+//                    }
+//                }
+//            } else {
+//                if let activeLanguageCode = activeLanguageCode, supportedTranslationLanguages.contains(activeLanguageCode) {
+//                    ignoredLanguages = [activeLanguageCode]
+//                }
+//            }
             
             let localizationListState = (view.views[preferencesKey] as? PreferencesView)?.values[PreferencesKeys.localizationListState]?.get(LocalizationListState.self)
             if let localizationListState = localizationListState, !localizationListState.availableOfficialLocalizations.isEmpty {
                 strongSelf.currentListState = localizationListState
                 
-                if #available(iOS 15.0, *) {
-                    entries.append(.translateTitle(text: presentationData.strings.Localization_TranslateMessages.uppercased()))
-                    entries.append(.translate(text: presentationData.strings.Localization_ShowTranslate, value: showTranslate))
-                    if showTranslate {
-                        var value = ""
-                        if ignoredLanguages.count > 1 {
-                            value = ignoredLanguages.joined(separator: ", ")
-                        } else if let code = ignoredLanguages.first {
-                            let enLocale = Locale(identifier: "en")
-                            if let title = enLocale.localizedString(forLanguageCode: code) {
-                                value = title
-                            }
-                        }
-                        
-                        entries.append(.doNotTranslate(text: presentationData.strings.Localization_DoNotTranslate, value: value))
-                        entries.append(.translateInfo(text: ignoredLanguages.count > 1 ? presentationData.strings.Localization_DoNotTranslateManyInfo : presentationData.strings.Localization_DoNotTranslateInfo))
-                    } else {
-                        entries.append(.translateInfo(text: presentationData.strings.Localization_ShowTranslateInfo))
-                    }
-                }
+                let presentationData = context.sharedContext.currentPresentationData.with { $0 }
+                let locale = presentationData.strings.baseLanguageCode
+//                entries.append(.translateTitle(text: presentationData.strings.Localization_TranslateMessages.uppercased()))
+                entries.append(.wgHandTranslate(text: l("WGStrings.HandTranslate", locale), value: showWgHandTranslate))
+                entries.append(.wgAutoTranslate(text: l("WGStrings.AutoTranslate", locale), value: showWgAutoTranslate))
+                entries.append(.wgSendTranslate(text: l("WGStrings.SendTranslate", locale), value: showWgSendTranslate))
+                
+                
+//                if #available(iOS 15.0, *) {
+//                    entries.append(.translateTitle(text: presentationData.strings.Localization_TranslateMessages.uppercased()))
+//                    entries.append(.translate(text: presentationData.strings.Localization_ShowTranslate, value: showTranslate))
+//                    if showTranslate {
+//                        var value = ""
+//                        if ignoredLanguages.count > 1 {
+//                            value = ignoredLanguages.joined(separator: ", ")
+//                        } else if let code = ignoredLanguages.first {
+//                            let enLocale = Locale(identifier: "en")
+//                            if let title = enLocale.localizedString(forLanguageCode: code) {
+//                                value = title
+//                            }
+//                        }
+//
+//                        entries.append(.doNotTranslate(text: presentationData.strings.Localization_DoNotTranslate, value: value))
+//                        entries.append(.translateInfo(text: ignoredLanguages.count > 1 ? presentationData.strings.Localization_DoNotTranslateManyInfo : presentationData.strings.Localization_DoNotTranslateInfo))
+//                    } else {
+//                        entries.append(.translateInfo(text: presentationData.strings.Localization_ShowTranslateInfo))
+//                    }
+//                }
                 
                 let availableSavedLocalizations = localizationListState.availableSavedLocalizations.filter({ info in !localizationListState.availableOfficialLocalizations.contains(where: { $0.languageCode == info.languageCode }) })
                 if availableSavedLocalizations.isEmpty {
@@ -529,6 +580,21 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 if let strongSelf = self {
                     strongSelf.push(translationSettingsController(context: strongSelf.context))
                 }
+            }, toggleShowWgAutoTranslate: { value in
+                let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
+                    let updated = current.withUpdatedShowWgAutoTranslate(value)
+                    return updated
+                }).start()
+            }, toggleShowWgHandTranslate: { value in
+                let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
+                    let updated = current.withUpdatedShowWgHandTranslate(value)
+                    return updated
+                }).start()
+            }, toggleShowWgSendTranslate: { value in
+                let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
+                    let updated = current.withUpdatedShowWgSendTranslate(value)
+                    return updated
+                }).start()
             }, selectLocalization: { [weak self] info in self?.selectLocalization(info) }, setItemWithRevealedOptions: setItemWithRevealedOptions, removeItem: removeItem, firstTime: previousEntriesAndPresentationData == nil, isLoading: entries.isEmpty, forceUpdate: previousEntriesAndPresentationData?.1 !== presentationData.theme || previousEntriesAndPresentationData?.2 !== presentationData.strings, animated: (previousEntriesAndPresentationData?.0.count ?? 0) >= entries.count, crossfade: (previousState == nil) != (localizationListState == nil))
             strongSelf.enqueueTransition(transition)
         })

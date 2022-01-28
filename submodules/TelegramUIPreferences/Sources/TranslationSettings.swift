@@ -6,14 +6,20 @@ import SwiftSignalKit
 public struct TranslationSettings: Codable, Equatable {
     public var showTranslate: Bool
     public var ignoredLanguages: [String]?
+    public var showWgAutoTranslate: Bool
+    public var showWgHandTranslate: Bool
+    public var showWgSendTranslate: Bool
     
     public static var defaultSettings: TranslationSettings {
-        return TranslationSettings(showTranslate: false, ignoredLanguages: nil)
+        return TranslationSettings(showTranslate: false, ignoredLanguages: nil, showWgAutoTranslate: false, showWgHandTranslate: false, showWgSendTranslate: false)
     }
     
-    init(showTranslate: Bool, ignoredLanguages: [String]?) {
+    init(showTranslate: Bool, ignoredLanguages: [String]?, showWgAutoTranslate: Bool, showWgHandTranslate: Bool, showWgSendTranslate: Bool) {
         self.showTranslate = showTranslate
         self.ignoredLanguages = ignoredLanguages
+        self.showWgAutoTranslate = showWgAutoTranslate
+        self.showWgHandTranslate = showWgHandTranslate
+        self.showWgSendTranslate = showWgSendTranslate
     }
     
     public init(from decoder: Decoder) throws {
@@ -21,6 +27,9 @@ public struct TranslationSettings: Codable, Equatable {
 
         self.showTranslate = try container.decodeIfPresent(Bool.self, forKey: "showTranslate") ?? false
         self.ignoredLanguages = try container.decodeIfPresent([String].self, forKey: "ignoredLanguages")
+        self.showWgAutoTranslate = try container.decodeIfPresent(Bool.self, forKey: "showWgAutoTranslate") ?? false
+        self.showWgHandTranslate = try container.decodeIfPresent(Bool.self, forKey: "showWgHandTranslate") ?? false
+        self.showWgSendTranslate = try container.decodeIfPresent(Bool.self, forKey: "showWgSendTranslate") ?? false
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -28,18 +37,33 @@ public struct TranslationSettings: Codable, Equatable {
 
         try container.encode(self.showTranslate, forKey: "showTranslate")
         try container.encodeIfPresent(self.ignoredLanguages, forKey: "ignoredLanguages")
+        try container.encode(self.showWgAutoTranslate, forKey: "showWgAutoTranslate")
+        try container.encode(self.showWgHandTranslate, forKey: "showWgHandTranslate")
+        try container.encode(self.showWgSendTranslate, forKey: "showWgSendTranslate")
     }
     
     public static func ==(lhs: TranslationSettings, rhs: TranslationSettings) -> Bool {
-        return lhs.showTranslate == rhs.showTranslate && lhs.ignoredLanguages == rhs.ignoredLanguages
+        return lhs.showTranslate == rhs.showTranslate && lhs.ignoredLanguages == rhs.ignoredLanguages && lhs.showWgAutoTranslate == rhs.showWgAutoTranslate && lhs.showWgHandTranslate == rhs.showWgHandTranslate && lhs.showWgSendTranslate == rhs.showWgSendTranslate
     }
     
     public func withUpdatedShowTranslate(_ showTranslate: Bool) -> TranslationSettings {
-        return TranslationSettings(showTranslate: showTranslate, ignoredLanguages: self.ignoredLanguages)
+        return TranslationSettings(showTranslate: showTranslate, ignoredLanguages: self.ignoredLanguages, showWgAutoTranslate: self.showWgAutoTranslate, showWgHandTranslate: self.showWgHandTranslate, showWgSendTranslate: self.showWgSendTranslate)
     }
     
     public func withUpdatedIgnoredLanguages(_ ignoredLanguages: [String]?) -> TranslationSettings {
-        return TranslationSettings(showTranslate: self.showTranslate, ignoredLanguages: ignoredLanguages)
+        return TranslationSettings(showTranslate: self.showTranslate, ignoredLanguages: ignoredLanguages, showWgAutoTranslate: showWgAutoTranslate, showWgHandTranslate: showWgHandTranslate, showWgSendTranslate: showWgSendTranslate)
+    }
+    
+    public func withUpdatedShowWgAutoTranslate(_ showWgAutoTranslate: Bool) -> TranslationSettings {
+        return TranslationSettings(showTranslate: showTranslate, ignoredLanguages: self.ignoredLanguages, showWgAutoTranslate: showWgAutoTranslate, showWgHandTranslate: self.showWgHandTranslate, showWgSendTranslate: self.showWgSendTranslate)
+    }
+    
+    public func withUpdatedShowWgHandTranslate(_ showWgHandTranslate: Bool) -> TranslationSettings {
+        return TranslationSettings(showTranslate: showTranslate, ignoredLanguages: self.ignoredLanguages, showWgAutoTranslate: self.showWgAutoTranslate, showWgHandTranslate: showWgHandTranslate, showWgSendTranslate: self.showWgSendTranslate)
+    }
+    
+    public func withUpdatedShowWgSendTranslate(_ showWgSendTranslate: Bool) -> TranslationSettings {
+        return TranslationSettings(showTranslate: showTranslate, ignoredLanguages: self.ignoredLanguages, showWgAutoTranslate: self.showWgAutoTranslate, showWgHandTranslate: showWgHandTranslate, showWgSendTranslate: showWgSendTranslate)
     }
 }
 

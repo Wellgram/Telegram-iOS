@@ -1,6 +1,6 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 
-WGDEPS = ["//Wellgram/WGData:WGData"]
+WGDEPS = ["//Wellgram/WGData:WGData", "//Wellgram/WGStrings:WGStrings"]
 
 swift_library(
     name = "SettingsUI",

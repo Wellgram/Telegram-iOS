@@ -5704,6 +5704,9 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
                         if case .scheduledMessages = strongSelf.presentationInterfaceState.subject {
                         } else {
                             strongSelf.chatDisplayNode.historyNode.scrollToEndOfHistory()
+                            if let messageId = messageIds[0] {//如果是
+                                self?.chatDisplayNode.transactionWithId(messageId: messageId)
+                            }
                         }
                     }
                 })

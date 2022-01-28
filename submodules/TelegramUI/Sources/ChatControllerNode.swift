@@ -2443,6 +2443,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         btnSendTranslate.addTarget(self, action: #selector(btnSendTranslateAction), forControlEvents: .touchUpInside)
         translateAreaNode.addSubnode(btnSendTranslate)
         
+        
 //        let langTableView = UITableView()
 //        langTableView.frame = CGRect(x: (width - 200) / 2, y: (height - 300) / 2, width: 200, height: 300)
 //        langTableView.delegate = self
@@ -2479,13 +2480,32 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         })
     }
     
+    var isTranslateSend = false
+    
     @objc func btnSendTranslateAction() {
         if self.theLbTranslateAfter.attributedText?.string.count ?? 0 > 0 {
+            self.isTranslateSend = true
             self.theTranslateNode.isHidden = true
             self.textInputPanelNode?.text = self.theLbTranslateAfter.attributedText?.string ?? ""
             self.textInputPanelNode?.sendButtonPressed()
         } else {
             print("请输入内容")
+        }
+    }
+    
+    func transactionWithId(messageId: MessageId) {
+        if isTranslateSend {
+            let newMessageText = self.theLbTranslateBefore.attributedText!.string + "\n\n\(gTranslateSeparator)\n" + self.theLbTranslateAfter.attributedText!.string
+            let _ = (self.context.account.postbox.transaction { transaction -> Void in
+                transaction.updateMessage(messageId, update: { currentMessage in
+                    var storeForwardInfo: StoreMessageForwardInfo?
+                    if let forwardInfo = currentMessage.forwardInfo {
+                        storeForwardInfo = StoreMessageForwardInfo(authorId: forwardInfo.author?.id, sourceId: forwardInfo.source?.id, sourceMessageId: forwardInfo.sourceMessageId, date: forwardInfo.date, authorSignature: forwardInfo.authorSignature, psaType: forwardInfo.psaType, flags: forwardInfo.flags)
+                    }
+
+                    return .update(StoreMessage(id: currentMessage.id, globallyUniqueId: currentMessage.globallyUniqueId, groupingKey: currentMessage.groupingKey, threadId: currentMessage.threadId, timestamp: currentMessage.timestamp, flags: StoreMessageFlags(currentMessage.flags), tags: currentMessage.tags, globalTags: currentMessage.globalTags, localTags: currentMessage.localTags, forwardInfo: storeForwardInfo, authorId: currentMessage.author?.id, text: newMessageText, attributes: currentMessage.attributes, media: currentMessage.media))
+                })
+            }).start()
         }
     }
     

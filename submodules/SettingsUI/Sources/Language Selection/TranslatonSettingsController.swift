@@ -15,10 +15,16 @@ import Translate
 private final class TranslationSettingsControllerArguments {
     let context: AccountContext
     let updateLanguageSelected: (String, Bool) -> Void
+    let wgAutoTranslateSelected: (Bool) -> Void
+    let wgHandTranslateSelected: (Bool) -> Void
+    let wgSendTranslateSelected: (Bool) -> Void
     
-    init(context: AccountContext, updateLanguageSelected: @escaping (String, Bool) -> Void) {
+    init(context: AccountContext, updateLanguageSelected: @escaping (String, Bool) -> Void, wgAutoTranslateSelected: @escaping (Bool) -> Void, wgHandTranslateSelected: @escaping (Bool) -> Void, wgSendTranslateSelected: @escaping (Bool) -> Void) {
         self.context = context
         self.updateLanguageSelected = updateLanguageSelected
+        self.wgAutoTranslateSelected = wgAutoTranslateSelected
+        self.wgHandTranslateSelected = wgHandTranslateSelected
+        self.wgSendTranslateSelected = wgSendTranslateSelected
     }
 }
 
@@ -108,6 +114,21 @@ public func translationSettingsController(context: AccountContext) -> ViewContro
                 updatedIgnoredLanguages.removeAll(where: { $0 == code })
             }
             updated = updated.withUpdatedIgnoredLanguages(updatedIgnoredLanguages)
+            return updated
+        }).start()
+    }, wgAutoTranslateSelected: { value in
+        let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
+            let updated = current
+            return updated
+        }).start()
+    }, wgHandTranslateSelected: { value in
+        let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
+            let updated = current
+            return updated
+        }).start()
+    }, wgSendTranslateSelected: { value in
+        let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
+            let updated = current
             return updated
         }).start()
     })
