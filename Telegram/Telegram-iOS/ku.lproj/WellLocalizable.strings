@@ -102,6 +102,7 @@
 "ManageFilters.Header" = "گۆڕینی پاڵاوتنە بەردەستەکان";
 
 "Messages.Translate" = "وەرگێڕان";
+"Messages.SendTranslate" = "Send";
 "Messages.UndoTranslate" = "گەڕاندنەوەی وەرگێڕان";
 "Messages.TranslateError" = "ببورە، وەرگێڕان بەردەست نییە.";
 

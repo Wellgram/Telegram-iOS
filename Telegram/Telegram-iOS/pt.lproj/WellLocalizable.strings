@@ -1,4 +1,4 @@
-"AppName" = "Nicegram";
+"AppName" = "Wellgram";
 
 /*ChatFilter*/
 "ChatFilter.Bots" = "Bots";
@@ -103,6 +103,7 @@
 "ManageFilters.Header" = "CONFIGURAR FILTROS DISPONÍVEIS";
 
 "Messages.Translate" = "Traduzir";
+"Messages.SendTranslate" = "Send";
 "Messages.UndoTranslate" = "Desfazer Tradução";
 "Messages.TranslateError" = "Desculpe, tradução indisponível.";
 

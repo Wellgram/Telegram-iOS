@@ -389,11 +389,11 @@ official_apple_pay_merchants = [
 ]
 
 official_bundle_ids = [
-    "ph.telegra.Telegraph",
+    "well.telegra.Telegraph",
     "org.telegram.Telegram-iOS",
 ]
 
-apple_pay_merchants = official_apple_pay_merchants if telegram_bundle_id == "ph.telegra.Telegraph" else []
+apple_pay_merchants = official_apple_pay_merchants if telegram_bundle_id == "well.telegra.Telegraph" else []
 
 apple_pay_merchants_fragment = "" if apple_pay_merchants == [] else """
 <key>com.apple.developer.in-app-payments</key>

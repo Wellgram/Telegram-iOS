@@ -465,16 +465,18 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
             }
             var existingIds = Set<String>()
             
-            // 开关
-            var showWgAutoTranslate = true
-            var showWgHandTranslate = true
-            var showWgSendTranslate = true
+            // 默认开关状态
+            var showWgAutoTranslate = false
+            var showWgHandTranslate = false
+            var showWgSendTranslate = false
+            // 读取开关状态
             if let translationSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) {
                 showWgAutoTranslate = translationSettings.showWgAutoTranslate
                 showWgHandTranslate = translationSettings.showWgHandTranslate
                 showWgSendTranslate = translationSettings.showWgSendTranslate
             }
             
+//            // 官方翻译
 //            var showTranslate = true
 //            var ignoredLanguages: [String] = []
 //            if let translationSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) {
@@ -498,12 +500,13 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 
                 let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                 let locale = presentationData.strings.baseLanguageCode
-//                entries.append(.translateTitle(text: presentationData.strings.Localization_TranslateMessages.uppercased()))
+                // 添加开关到列表
                 entries.append(.wgHandTranslate(text: l("WGStrings.HandTranslate", locale), value: showWgHandTranslate))
                 entries.append(.wgAutoTranslate(text: l("WGStrings.AutoTranslate", locale), value: showWgAutoTranslate))
                 entries.append(.wgSendTranslate(text: l("WGStrings.SendTranslate", locale), value: showWgSendTranslate))
                 
                 
+//                // 官方翻译
 //                if #available(iOS 15.0, *) {
 //                    entries.append(.translateTitle(text: presentationData.strings.Localization_TranslateMessages.uppercased()))
 //                    entries.append(.translate(text: presentationData.strings.Localization_ShowTranslate, value: showTranslate))
@@ -525,23 +528,29 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
 //                    }
 //                }
                 
+                // 非官方已保存本地化
                 let availableSavedLocalizations = localizationListState.availableSavedLocalizations.filter({ info in !localizationListState.availableOfficialLocalizations.contains(where: { $0.languageCode == info.languageCode }) })
                 if availableSavedLocalizations.isEmpty {
                     updateCanStartEditing(nil)
                 } else {
                     updateCanStartEditing(isEditing)
                 }
-                if !availableSavedLocalizations.isEmpty {
-                    entries.append(.localizationTitle(text: presentationData.strings.Localization_InterfaceLanguage.uppercased(), section: LanguageListSection.unofficial.rawValue))
-                    
-                    for info in niceLocalizations {
-                        if existingIds.contains(info.languageCode) {
-                            continue
-                        }
-                        existingIds.insert(info.languageCode)
-                        entries.append(.localization(index: entries.count, info: info, type: .unofficial, selected: info.languageCode == activeLanguageCode, activity: applyingCode == info.languageCode, revealed: revealedCode == info.languageCode, editing: isEditing))
+                
+                // 语言包标题添加在unofficial的section中
+                entries.append(.localizationTitle(text: presentationData.strings.Localization_InterfaceLanguage.uppercased(), section: LanguageListSection.unofficial.rawValue))
+                
+                // 先添加自己的本地语言包
+                for info in niceLocalizations {
+                    if existingIds.contains(info.languageCode) {
+                        continue
                     }
-                    
+                    existingIds.insert(info.languageCode)
+                    entries.append(.localization(index: entries.count, info: info, type: .unofficial, selected: info.languageCode == activeLanguageCode, activity: applyingCode == info.languageCode, revealed: revealedCode == info.languageCode, editing: isEditing))
+                }
+                
+                // 非官方已保存本地化不为空
+                if !availableSavedLocalizations.isEmpty {
+                    // 再添加第三方语言包
                     for info in availableSavedLocalizations {
                         if existingIds.contains(info.languageCode) {
                             continue
@@ -549,9 +558,9 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                         existingIds.insert(info.languageCode)
                         entries.append(.localization(index: entries.count, info: info, type: .unofficial, selected: info.languageCode == activeLanguageCode, activity: applyingCode == info.languageCode, revealed: revealedCode == info.languageCode, editing: isEditing))
                     }
-                } else {
-                    entries.append(.localizationTitle(text: presentationData.strings.Localization_InterfaceLanguage.uppercased(), section: LanguageListSection.official.rawValue))
                 }
+//                entries.append(.localizationTitle(text: presentationData.strings.Localization_InterfaceLanguage.uppercased(), section: LanguageListSection.official.rawValue))
+                // 官方语言包
                 for info in localizationListState.availableOfficialLocalizations {
                     if existingIds.contains(info.languageCode) {
                         continue

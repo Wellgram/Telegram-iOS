@@ -1,4 +1,4 @@
-"AppName" = "Nicegram";
+"AppName" = "Wellgram";
 
 /*ChatFilter*/
 "ChatFilter.Bots" = "봇";
@@ -103,6 +103,7 @@
 "ManageFilters.Header" = "사용 가능한 필터 구성";
 
 "Messages.Translate" = "번역";
+"Messages.SendTranslate" = "Send";
 "Messages.UndoTranslate" = "번역 취소";
 "Messages.TranslateError" = "죄송합니다. 번역 할 수 없습니다.";
 

@@ -4,7 +4,6 @@ import SwiftSignalKit
 import TelegramApi
 import MtProtoKit
 
-
 // MARK: Wellgram Import
 import WGTranslate
 import WGStrings
@@ -2488,6 +2487,7 @@ func replayFinalState(
             case let .AddMessages(messages, location):
                 if case .UpperHistoryBlock = location {
                     for message in messages {
+                        var isChat = false
                         if case let .Id(id) = message.id {
                             if let threadId = message.threadId {
                                 let messageThreadId = makeThreadIdMessageId(peerId: message.id.peerId, threadId: threadId)
@@ -2498,31 +2498,54 @@ func replayFinalState(
                                 }
                             }
                         }
-                        // TODO: 全局实时翻译，目前默认翻译成英文。
-//                        if !message.text.isEmpty {
-//                            
-////                            let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-////                            let locale = presentationData.strings.baseLanguageCode
                         
-                            let _ = (gtranslate(message.text, "en")  |> deliverOnMainQueue).start(next: { translated in
-                                let newMessageText = message.text + "\n\n\(gTranslateSeparator)\n" + translated
-                                let _ = (postbox.transaction { transaction -> Void in
-                                    if case let .Id(id) = message.id {
-                                        transaction.updateMessage(id, update: { currentMessage in
-                                            var storeForwardInfo: StoreMessageForwardInfo?
-                                            if let forwardInfo = currentMessage.forwardInfo {
-                                                storeForwardInfo = StoreMessageForwardInfo(authorId: forwardInfo.author?.id, sourceId: forwardInfo.source?.id, sourceMessageId: forwardInfo.sourceMessageId, date: forwardInfo.date, authorSignature: forwardInfo.authorSignature, psaType: forwardInfo.psaType, flags: forwardInfo.flags)
-                                            }
-
-                                            return .update(StoreMessage(id: currentMessage.id, globallyUniqueId: currentMessage.globallyUniqueId, groupingKey: currentMessage.groupingKey, threadId:  currentMessage.threadId, timestamp: currentMessage.timestamp, flags: StoreMessageFlags(currentMessage.flags), tags: currentMessage.tags, globalTags: currentMessage.globalTags, localTags: currentMessage.localTags, forwardInfo: storeForwardInfo, authorId: currentMessage.author?.id, text: newMessageText, attributes: currentMessage.attributes, media: currentMessage.media))
-                                        })
+                        isChat = true
+                        // TODO: Wellgram 全局实时翻译，目前默认翻译成英文。
+                        
+                        if !message.text.isEmpty && isChat == true {
+                            
+                            var isAutoTranslate = false
+                            var langCode = "en"
+                            let semaphoreSignal = DispatchSemaphore(value: 0)
+                            let dataSignal: Signal<AccountSharedDataView<TelegramAccountManagerTypes>, SwiftSignalKit.NoError> =  accountManager.sharedData(keys: [SharedDataKeys.localizationSettings, applicationSpecificSharedDataKey(18)])
+                            
+                            let _ = dataSignal.start { sharedData in
+                                
+                                if let translationSettings = sharedData.entries[applicationSpecificSharedDataKey(18)]?.get(WGTranslationSettings.self) {
+                                    isAutoTranslate = translationSettings.showWgAutoTranslate
+                                }
+                                if let localizable = sharedData.entries[SharedDataKeys.localizationSettings]?.get(LocalizationSettings.self) {
+                                    if let secondaryComponent = localizable.secondaryComponent {
+                                        langCode = secondaryComponent.languageCode
                                     }
-                                }).start()
-                            }, error: { _ in
-
-                            })
-////                            message = StoreMessage(id: message.id, globallyUniqueId: message.globallyUniqueId, groupingKey: message.groupingKey, threadId: message.threadId, timestamp: message.timestamp, flags: message.flags, tags: message.tags, globalTags: message.globalTags, localTags: message.localTags, forwardInfo: message.forwardInfo, authorId: message.authorId, text: "Good", attributes: message.attributes, media: message.media)
-//                        }
+                                }
+                                semaphoreSignal.signal()
+                            } error: { error in
+                                semaphoreSignal.signal()
+                            } completed: {
+                                semaphoreSignal.signal()
+                            }
+                            semaphoreSignal.wait()
+                            if isAutoTranslate {
+                                let _ = (gtranslate(message.text, langCode)  |> deliverOnMainQueue).start(next: { translated in
+                                    let newMessageText = message.text + "\n\n\(gTranslateSeparator)\n" + translated
+                                    let _ = (postbox.transaction { transaction -> Void in
+                                        if case let .Id(id) = message.id {
+                                            transaction.updateMessage(id, update: { currentMessage in
+                                                var storeForwardInfo: StoreMessageForwardInfo?
+                                                if let forwardInfo = currentMessage.forwardInfo {
+                                                    storeForwardInfo = StoreMessageForwardInfo(authorId: forwardInfo.author?.id, sourceId: forwardInfo.source?.id, sourceMessageId: forwardInfo.sourceMessageId, date: forwardInfo.date, authorSignature: forwardInfo.authorSignature, psaType: forwardInfo.psaType, flags: forwardInfo.flags)
+                                                }
+                                                
+                                                return .update(StoreMessage(id: currentMessage.id, globallyUniqueId: currentMessage.globallyUniqueId, groupingKey: currentMessage.groupingKey, threadId:  currentMessage.threadId, timestamp: currentMessage.timestamp, flags: StoreMessageFlags(currentMessage.flags), tags: currentMessage.tags, globalTags: currentMessage.globalTags, localTags: currentMessage.localTags, forwardInfo: storeForwardInfo, authorId: currentMessage.author?.id, text: newMessageText, attributes: currentMessage.attributes, media: currentMessage.media))
+                                            })
+                                        }
+                                    }).start()
+                                }, error: { _ in
+                                    
+                                })
+                            }
+                        }
                     }
                 }
             
@@ -3695,4 +3718,13 @@ func replayFinalState(
     }
     
     return AccountReplayedFinalState(state: finalState, addedIncomingMessageIds: addedIncomingMessageIds, addedReactionEvents: addedReactionEvents, wasScheduledMessageIds: wasScheduledMessageIds, addedSecretMessageIds: addedSecretMessageIds, deletedMessageIds: deletedMessageIds, updatedTypingActivities: updatedTypingActivities, updatedWebpages: updatedWebpages, updatedCalls: updatedCalls, addedCallSignalingData: addedCallSignalingData, updatedGroupCallParticipants: updatedGroupCallParticipants, updatedPeersNearby: updatedPeersNearby, isContactUpdates: isContactUpdates, delayNotificatonsUntil: delayNotificatonsUntil, updatedIncomingThreadReadStates: updatedIncomingThreadReadStates, updatedOutgoingThreadReadStates: updatedOutgoingThreadReadStates)
+}
+
+// FIXIT: Wellgram 因为暂时没有想到解决读取不到TelegramUIPreferences.TranslationSettings问题，先这样解决
+public struct WGTranslationSettings: Codable, Equatable {
+    public var showTranslate: Bool
+    public var ignoredLanguages: [String]?
+    public var showWgAutoTranslate: Bool
+    public var showWgHandTranslate: Bool
+    public var showWgSendTranslate: Bool
 }

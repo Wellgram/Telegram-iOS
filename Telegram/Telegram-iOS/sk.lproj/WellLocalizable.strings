@@ -1,4 +1,4 @@
-"AppName" = "Nicegram";
+"AppName" = "Wellgram";
 
 /*ChatFilter*/
 "ChatFilter.Bots" = "Boti";
@@ -51,6 +51,7 @@
 "IAP.Common.Congrats" = "Gratulujeme!";
 
 "Messages.Translate" = "Preložiť";
+"Messages.SendTranslate" = "Send";
 
 /*NG Lab Registration Date*/
 "NGLab.RegDate.Btn" = "Dátum registrácie";

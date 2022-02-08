@@ -1,4 +1,4 @@
-"AppName" = "Nicegram";
+"AppName" = "Wellgram";
 
 /*ChatFilter*/
 "ChatFilter.Bots" = "Botlar";
@@ -103,6 +103,7 @@
 "ManageFilters.Header" = "KULLANILAN FİLTRELERİ ÖZELLEŞTİR";
 
 "Messages.Translate" = "Çevir";
+"Messages.SendTranslate" = "Send";
 "Messages.UndoTranslate" = "Çeviriyi Geri Al";
 "Messages.TranslateError" = "Üzgünüz, çeviri kullanılamıyor.";
 

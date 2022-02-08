@@ -606,6 +606,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
         } else {
             translationSettings = TranslationSettings.defaultSettings
         }
+        print(sharedData)
         
         return (MessageContextMenuData(starStatus: stickerSaveStatus, canReply: canReply, canPin: canPin, canEdit: canEdit, canSelect: canSelect, resourceStatus: resourceStatus, messageActions: messageActions), updatingMessageMedia, cachedData, appConfig, isMessageRead, messageViewsPrivacyTips, availableReactions, translationSettings)
     }

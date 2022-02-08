@@ -1,4 +1,4 @@
-"AppName" = "Nicegram";
+"AppName" = "Wellgram";
 
 /*ChatFilter*/
 "ChatFilter.Bots" = "机器人";
@@ -108,6 +108,7 @@
 "ManageFilters.Header" = "配置可用的过滤器";
 
 "Messages.Translate" = "翻译";
+"Messages.SendTranslate" = "发送";
 "Messages.UndoTranslate" = "撤消翻译";
 "Messages.TranslateError" = "抱歉，翻译不可用。";
 

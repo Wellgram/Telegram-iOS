@@ -17,7 +17,9 @@ import ConfettiEffect
 import WallpaperBackgroundNode
 import GridMessageSelectionNode
 import SparseItemGrid
+import SettingsUI
 import WGTranslate
+import WGStrings
 
 final class VideoNavigationControllerDropContentItem: NavigationControllerDropContentItem {
     let itemNode: OverlayMediaItemNode
@@ -2375,28 +2377,109 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         }
     }
     
+    //MARK: - Wellgram 发送翻译后的文本消息
     var theTranslateNode: ASButtonNode!
-    var theLbTranslateBefore: ASTextNode!
-    var theLbTranslateAfter: ASTextNode!
+    var theLbTranslateBefore: ASEditableTextNode!
+    var theLbTranslateAfter: ASEditableTextNode!
     
-//    var theLangTableView: UITableView!
+    var theLangBaseNode: ASButtonNode!
+    var theLangSelectView: ASScrollNode!
+    var theSelectLocalizableInfo: LocalizationInfo?
+    var theLastLangSelectNode: ASButtonNode!
+    ///翻译语言列表数据
+    var theLocalizableInfos: [LocalizationInfo]?
+    ///是否通过按钮发送翻译
+    var isTranslateSend = false
     
-    ///显示翻译框
+    ///获取本地化数据
+    func getLocalizableInfos() {
+        if self.theLocalizableInfos == nil {
+            let semaphoreSignal = DispatchSemaphore(value: 0)
+            let preferencesKey: PostboxViewKey = .preferences(keys: Set([PreferencesKeys.localizationListState]))
+            let localizations = combineLatest(context.account.postbox.combinedView(keys: [preferencesKey]), context.sharedContext.accountManager.sharedData(keys: [SharedDataKeys.localizationSettings])) |> map { view, sharedData -> ([LocalizationInfo], String?) in
+                
+                var localizationInfos: [LocalizationInfo] = []
+                var existingIds = Set<String>()
+                //包含语言列表
+                let localizationListState = (view.views[preferencesKey] as? PreferencesView)?.values[PreferencesKeys.localizationListState]?.get(LocalizationListState.self)
+                
+                var activeLanguageCode: String?
+                if let localizationSettings = sharedData.entries[SharedDataKeys.localizationSettings]?.get(LocalizationSettings.self) {
+                    activeLanguageCode = localizationSettings.primaryComponent.languageCode
+                }
+                //判断官方语言包列表是否为空
+                if let localizationListState = localizationListState, !localizationListState.availableOfficialLocalizations.isEmpty {
+                    
+                    // 自己的语言包
+                    for info in niceLocalizations {
+                        if existingIds.contains(info.languageCode) {
+                            continue
+                        }
+                        existingIds.insert(info.languageCode)
+                        localizationInfos.append(info)
+                    }
+                    
+                    // 筛选已保存的第三方语言包
+                    let availableSavedLocalizations = localizationListState.availableSavedLocalizations.filter({ info in !localizationListState.availableOfficialLocalizations.contains(where: { $0.languageCode == info.languageCode }) })
+                    
+                    // 已保存的第三方语言包
+                    if !availableSavedLocalizations.isEmpty {
+                        for info in availableSavedLocalizations {
+                            if existingIds.contains(info.languageCode) {
+                                continue
+                            }
+                            existingIds.insert(info.languageCode)
+                            localizationInfos.append(info)
+                        }
+                    }
+                    
+                    // 官方语言包
+                    for info in localizationListState.availableOfficialLocalizations {
+                        if existingIds.contains(info.languageCode) {
+                            continue
+                        }
+                        existingIds.insert(info.languageCode)
+                        localizationInfos.append(info)
+                    }
+                }
+                return (localizationInfos, activeLanguageCode)
+            }
+            
+            let _ = localizations.start { (localizations, activeLanguageCode) in
+                self.theLocalizableInfos = localizations
+                semaphoreSignal.signal()
+            } error: { error in
+                semaphoreSignal.signal()
+            } completed: {
+                semaphoreSignal.signal()
+            }
+            semaphoreSignal.wait()
+        }
+    }
+    
+    /// 翻译语言选择按钮
+    var theBtnSelectLang: ASButtonNode!
+    
+    /// 显示翻译框
     func showWgTranslate() {
-        print("Translate Success")
+        
+        self.view.endEditing(true)
         
         let width = self.frame.size.width
         let height = self.frame.size.height
         
         if self.theTranslateNode != nil {
-            self.theLbTranslateBefore.attributedText = NSAttributedString(string: self.textInputPanelNode?.text ?? "", font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+            if let translateBeforeText = self.theLbTranslateBefore.attributedText?.string, let textInputPanelNodeText = self.textInputPanelNode?.text, translateBeforeText != textInputPanelNodeText {
+                self.theLbTranslateBefore.attributedText = NSAttributedString(string: translateBeforeText, font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+                updateTranslateAfter(title: "")
+            }
             self.theTranslateNode.isHidden = false
             return
         }
         
         let translateNode = ASButtonNode()
         translateNode.frame = self.frame
-        translateNode.addTarget(self, action: #selector(tapAction), forControlEvents: .touchUpInside)
+        translateNode.addTarget(self, action: #selector(hideenTranslateAction), forControlEvents: .touchUpInside)
         self.addSubnode(translateNode)
         self.theTranslateNode = translateNode
         
@@ -2410,78 +2493,141 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         translateAreaNode.backgroundColor = .white
         translateNode.addSubnode(translateAreaNode)
         
-        let lbTranslateBefore = ASTextNode()
+        let lbTranslateBefore = ASEditableTextNode()
         lbTranslateBefore.frame = CGRect(x: 0, y: 0, width: 300, height: 180)
         lbTranslateBefore.attributedText = NSAttributedString(string: self.textInputPanelNode?.text ?? "", font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+        lbTranslateBefore.textView.isEditable = false
         translateAreaNode.addSubnode(lbTranslateBefore)
         self.theLbTranslateBefore = lbTranslateBefore
         
         let btnSelectLang = ASButtonNode()
-        btnSelectLang.frame = CGRect(x: 0, y: 200, width: 150, height: 80)
-        btnSelectLang.backgroundColor = .yellow
-        btnSelectLang.setTitle("英语", with: .systemFont(ofSize: 15), with: .black, for: .normal)
+        btnSelectLang.frame = CGRect(x: 0, y: 180, width: 300, height: 50)
+        btnSelectLang.backgroundColor = .lightGray
         btnSelectLang.addTarget(self, action: #selector(btnSelectLangAction), forControlEvents: .touchUpInside)
         translateAreaNode.addSubnode(btnSelectLang)
+        self.theBtnSelectLang = btnSelectLang
         
+        let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
+        let locale = presentationData.strings.baseLanguageCode
+        let btnTranslateTitle = l("Messages.Translate", locale)
         let btnTranslate = ASButtonNode()
-        btnTranslate.frame = CGRect(x: 150, y: 200, width: 150, height: 80)
+        btnTranslate.frame = CGRect(x: 200, y: 240, width: 80, height: 40)
         btnTranslate.backgroundColor = .lightGray
-        btnTranslate.setTitle("翻译", with: .systemFont(ofSize: 15), with: .black, for: .normal)
+        btnTranslate.cornerRadius = 5
+        btnTranslate.setTitle(btnTranslateTitle, with: .systemFont(ofSize: 15), with: .black, for: .normal)
         btnTranslate.addTarget(self, action: #selector(btnTranslateAction), forControlEvents: .touchUpInside)
         translateAreaNode.addSubnode(btnTranslate)
         
-        let lbTranslateAfter = ASTextNode()
+        let lbTranslateAfter = ASEditableTextNode()
         lbTranslateAfter.frame = CGRect(x: 0, y: 280, width: width, height: 180)
         lbTranslateAfter.attributedText = NSAttributedString(string: "", font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+        lbTranslateAfter.textView.isEditable = false
         translateAreaNode.addSubnode(lbTranslateAfter)
         self.theLbTranslateAfter = lbTranslateAfter
         
+        let btnSendTranslateTitle = l("Messages.SendTranslate", locale)
         let btnSendTranslate = ASButtonNode()
         btnSendTranslate.frame = CGRect(x: 0, y: 440, width: 300, height: 60)
-        btnSendTranslate.backgroundColor = .red
-        btnSendTranslate.setTitle("发送", with: .systemFont(ofSize: 15), with: .black, for: .normal)
+        btnSendTranslate.backgroundColor = .blue
+        btnSendTranslate.setTitle(btnSendTranslateTitle, with: .systemFont(ofSize: 15), with: .white, for: .normal)
         btnSendTranslate.addTarget(self, action: #selector(btnSendTranslateAction), forControlEvents: .touchUpInside)
         translateAreaNode.addSubnode(btnSendTranslate)
         
+        getLocalizableInfos()
         
-//        let langTableView = UITableView()
-//        langTableView.frame = CGRect(x: (width - 200) / 2, y: (height - 300) / 2, width: 200, height: 300)
-//        langTableView.delegate = self
-//        langTableView.dataSource = self
-//        translateAreaNode.view.addSubview(langTableView)
-        
+        if self.theLangBaseNode == nil {
+            let width = self.frame.size.width
+            let height = self.frame.size.height
+            
+            let langBaseNode = ASButtonNode()
+            langBaseNode.frame = self.frame
+            langBaseNode.addTarget(self, action: #selector(hideenLangAction), forControlEvents: .touchUpInside)
+            self.theTranslateNode.addSubnode(langBaseNode)
+            self.theLangBaseNode = langBaseNode
+            
+            let langSelectView = ASScrollNode()
+            langSelectView.frame = CGRect(x: (width - 300) / 2, y: (height - 500) / 2, width: 300, height: 500)
+            langSelectView.backgroundColor = .white
+            langBaseNode.addSubnode(langSelectView)
+            self.theLangSelectView = langSelectView
+            
+            if let theLocalizableInfos = self.theLocalizableInfos {
+                self.theLangSelectView.view.contentSize = CGSize(width: 300, height: 40 * theLocalizableInfos.count)
+                for idx in 0 ..< theLocalizableInfos.count {
+                    let localizableInfo = theLocalizableInfos[idx]
+                    let localizableTitle = localizableInfo.localizedTitle
+                    let title = localizableInfo.title
+                    let appendStr = title + "\n" + localizableTitle
+                    let button = ASButtonNode()
+                    button.titleNode.maximumNumberOfLines = 0
+                    button.titleNode.textAlignment = .center
+                    button.highlightedTitleNode.maximumNumberOfLines = 0
+                    button.highlightedTitleNode.textAlignment = .center
+                    
+                    button.frame = CGRect(x: 0, y: 40 * idx, width: 300, height: 40)
+                    button.addTarget(self, action: #selector(localizableSelectAction(button:)), forControlEvents: .touchUpInside)
+                    button.setTitle(appendStr, with: .systemFont(ofSize: 13), with: .black, for: .normal)
+                    button.setTitle(appendStr, with: .systemFont(ofSize: 13), with: .red, for: .highlighted)
+                    if idx == 0 {
+                        self.theSelectLocalizableInfo = localizableInfo
+                        button.isHighlighted = true
+                        self.theLastLangSelectNode = button
+                        updateBtnSelectLang(title: localizableTitle)
+                    }
+                    button.view.tag = idx
+                    self.theLangSelectView.addSubnode(button)
+                }
+            }
+            self.theLangBaseNode.isHidden = true
+        }
     }
     
-//    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-//        return self.context.sharedContext.currentPresentationData
-//    }
-//
-//    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
-//
-//        return UITableViewCell()
-//    }
+    ///更新语言选择按钮文字
+    func updateBtnSelectLang(title: String) {
+        self.theBtnSelectLang.setTitle(title, with: .systemFont(ofSize: 13), with: .black, for: .normal)
+    }
     
-    @objc func tapAction() {
+    ///更新发送消息文本翻译后的文字
+    func updateTranslateAfter(title: String) {
+        self.theLbTranslateAfter.attributedText = NSAttributedString(string: title, font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+    }
+    
+    ///点击蒙版隐藏翻译
+    @objc func hideenTranslateAction() {
+        self.isTranslateSend = false
         self.theTranslateNode.isHidden = true
     }
     
-    @objc func btnSelectLangAction() {
-//        self.context.sharedContext.presentationData
+    ///隐藏语言选择列表
+    @objc func hideenLangAction() {
+        self.theLangBaseNode.isHidden = true
     }
     
+    ///选择翻译语言点击事件
+    @objc func localizableSelectAction(button: ASButtonNode) {
+        self.theLastLangSelectNode.isHighlighted = false
+        button.isHighlighted = true
+        self.theLastLangSelectNode = button
+        self.theSelectLocalizableInfo = self.theLocalizableInfos![button.view.tag]
+        self.theLangBaseNode.isHidden = true
+        updateBtnSelectLang(title: self.theSelectLocalizableInfo?.localizedTitle ?? "")
+    }
+    
+    ///显示语言列表
+    @objc func btnSelectLangAction() {
+        self.theLangBaseNode.isHidden = false
+    }
+    
+    ///点击翻译按钮，发送翻译文本
     @objc func btnTranslateAction() {
         let text = self.theLbTranslateBefore.attributedText?.string ?? ""
-        let presentationData = self.context.sharedContext.currentPresentationData.with({ $0 })
-        let _ = (gtranslate(text, presentationData.strings.baseLanguageCode)  |> deliverOnMainQueue).start(next: { translated in
-//            self.textInputPanelNode?.text = translated
-            self.theLbTranslateAfter.attributedText = NSAttributedString(string: translated, font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
-        }, error: { _ in
-
-        })
+        let language = self.theSelectLocalizableInfo?.baseLanguageCode ?? self.theSelectLocalizableInfo?.languageCode ?? "en"
+        let _ = (gtranslate(text, language) |> deliverOnMainQueue).start(next: { translated in
+            self.updateTranslateAfter(title: translated)
+        }, error: { _ in })
     }
     
-    var isTranslateSend = false
-    
+    ///发送翻译文本
     @objc func btnSendTranslateAction() {
         if self.theLbTranslateAfter.attributedText?.string.count ?? 0 > 0 {
             self.isTranslateSend = true
@@ -2493,6 +2639,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         }
     }
     
+    ///根据messageId对对应message的bubble进行修改
     func transactionWithId(messageId: MessageId) {
         if isTranslateSend {
             let newMessageText = self.theLbTranslateBefore.attributedText!.string + "\n\n\(gTranslateSeparator)\n" + self.theLbTranslateAfter.attributedText!.string
@@ -2508,6 +2655,8 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
             }).start()
         }
     }
+    //MARK: - Wellgram end 发送翻译后的文本消息
+    
     
     func sendCurrentMessage(silentPosting: Bool? = nil, scheduleTime: Int32? = nil, completion: @escaping () -> Void = {}) {
         if let textInputPanelNode = self.inputPanelNode as? ChatTextInputPanelNode {

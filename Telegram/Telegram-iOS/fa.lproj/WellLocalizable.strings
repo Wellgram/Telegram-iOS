@@ -1,4 +1,4 @@
-"AppName" = "Nicegram";
+"AppName" = "Wellgram";
 
 /*ChatFilter*/
 "ChatFilter.Bots" = "ربات ها";
@@ -95,6 +95,7 @@
 "ManageFilters.Header" = "فیلترهای موجود را پیکربندی کنید";
 
 "Messages.Translate" = "ترجمه";
+"Messages.SendTranslate" = "Send";
 "Messages.UndoTranslate" = "بازگردانی ترجمه";
 "Messages.TranslateError" = "متأسفیم، ترجمه در دسترس نیست.";
 

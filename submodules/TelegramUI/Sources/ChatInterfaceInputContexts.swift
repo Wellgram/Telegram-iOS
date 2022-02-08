@@ -140,8 +140,8 @@ func textInputStateContextQueryRangeAndType(_ inputState: ChatTextInputState) ->
                         possibleQueryRange = NSRange(location: index, length: maxIndex - index)
                     }
                     break
-                    } else if c == slashScalar {
-                        if scalarCanPrependQueryControl(previousC) {
+                } else if c == slashScalar {
+                    if scalarCanPrependQueryControl(previousC) {
                         possibleTypes = possibleTypes.intersection([.command])
                         definedType = true
                         index += 1
@@ -204,23 +204,23 @@ func inputContextQueriesForChatPresentationIntefaceState(_ chatPresentationInter
 
 func inputTextPanelStateForChatPresentationInterfaceState(_ chatPresentationInterfaceState: ChatPresentationInterfaceState, context: AccountContext) -> ChatTextInputPanelState {
     var contextPlaceholder: NSAttributedString?
-    loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
-        if case let .contextRequestResult(peer, _) = result, case let .user(botUser) = peer, let botInfo = botUser.botInfo, let inlinePlaceholder = botInfo.inlinePlaceholder {
-            let inputQueries = inputContextQueriesForChatPresentationIntefaceState(chatPresentationInterfaceState)
-            for inputQuery in inputQueries {
-                if case let .contextRequest(addressName, query) = inputQuery, query.isEmpty {
-                    let baseFontSize: CGFloat = max(chatTextInputMinFontSize, chatPresentationInterfaceState.fontSize.baseDisplaySize)
-                    
-                    let string = NSMutableAttributedString()
-                    string.append(NSAttributedString(string: "@" + addressName, font: Font.regular(baseFontSize), textColor: UIColor.clear))
-                    string.append(NSAttributedString(string: " " + inlinePlaceholder, font: Font.regular(baseFontSize), textColor: chatPresentationInterfaceState.theme.chat.inputPanel.inputPlaceholderColor))
-                    contextPlaceholder = string
-                }
+loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
+    if case let .contextRequestResult(peer, _) = result, case let .user(botUser) = peer, let botInfo = botUser.botInfo, let inlinePlaceholder = botInfo.inlinePlaceholder {
+        let inputQueries = inputContextQueriesForChatPresentationIntefaceState(chatPresentationInterfaceState)
+        for inputQuery in inputQueries {
+            if case let .contextRequest(addressName, query) = inputQuery, query.isEmpty {
+                let baseFontSize: CGFloat = max(chatTextInputMinFontSize, chatPresentationInterfaceState.fontSize.baseDisplaySize)
+                
+                let string = NSMutableAttributedString()
+                string.append(NSAttributedString(string: "@" + addressName, font: Font.regular(baseFontSize), textColor: UIColor.clear))
+                string.append(NSAttributedString(string: " " + inlinePlaceholder, font: Font.regular(baseFontSize), textColor: chatPresentationInterfaceState.theme.chat.inputPanel.inputPlaceholderColor))
+                contextPlaceholder = string
             }
-            
-            break loop
         }
+        
+        break loop
     }
+}
     
     var currentAutoremoveTimeout: Int32? = chatPresentationInterfaceState.autoremoveTimeout
     var canSetupAutoremoveTimeout = false
@@ -228,12 +228,12 @@ func inputTextPanelStateForChatPresentationInterfaceState(_ chatPresentationInte
     var accessoryItems: [ChatTextInputAccessoryItem] = []
     if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramSecretChat {
         var extendedSearchLayout = false
-        loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
-            if case let .contextRequestResult(peer, _) = result, peer != nil {
-                extendedSearchLayout = true
-                break loop
-            }
+    loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
+        if case let .contextRequestResult(peer, _) = result, peer != nil {
+            extendedSearchLayout = true
+            break loop
         }
+    }
         
         if !extendedSearchLayout {
             currentAutoremoveTimeout = peer.messageAutoremoveTimeout
@@ -267,81 +267,83 @@ func inputTextPanelStateForChatPresentationInterfaceState(_ chatPresentationInte
     }
     
     switch chatPresentationInterfaceState.inputMode {
-        case .media:
-            accessoryItems.append(.keyboard)
-            return ChatTextInputPanelState(accessoryItems: accessoryItems, contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
-        case .inputButtons:
-            return ChatTextInputPanelState(accessoryItems: [.keyboard], contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
-        case .none, .text:
-            if let _ = chatPresentationInterfaceState.interfaceState.editMessage {
-                return ChatTextInputPanelState(accessoryItems: [], contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
-            } else {
-                var accessoryItems: [ChatTextInputAccessoryItem] = []
-                var extendedSearchLayout = false
-                loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
-                    if case let .contextRequestResult(peer, _) = result, peer != nil {
-                        extendedSearchLayout = true
-                        break loop
-                    }
-                }
-                if !extendedSearchLayout {
-                    if case .scheduledMessages = chatPresentationInterfaceState.subject {
-                    } else if chatPresentationInterfaceState.renderedPeer?.peerId != context.account.peerId {
-                        if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramSecretChat, chatPresentationInterfaceState.interfaceState.composeInputState.inputText.length == 0 {
-                            accessoryItems.append(.messageAutoremoveTimeout(peer.messageAutoremoveTimeout))
-                        } else if currentAutoremoveTimeout != nil && chatPresentationInterfaceState.interfaceState.composeInputState.inputText.length == 0 {
-                            accessoryItems.append(.messageAutoremoveTimeout(currentAutoremoveTimeout))
-                        }
-                    }
-                }
-                
-                if chatPresentationInterfaceState.interfaceState.composeInputState.inputText.length == 0 && chatPresentationInterfaceState.interfaceState.forwardMessageIds == nil {
-                    if chatPresentationInterfaceState.hasScheduledMessages {
-                        accessoryItems.append(.scheduledMessages)
-                    }
-                    
-                    var stickersEnabled = true
-                    if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramChannel {
-                        if case .broadcast = peer.info, canSendMessagesToPeer(peer) {
-                            accessoryItems.append(.silentPost(chatPresentationInterfaceState.interfaceState.silentPosting))
-                        }
-                        if peer.hasBannedPermission(.banSendStickers) != nil {
-                            stickersEnabled = false
-                        }
-                    } else if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramGroup {
-                        if peer.hasBannedPermission(.banSendStickers) {
-                            stickersEnabled = false
-                        }
-                    }
-                    if chatPresentationInterfaceState.hasBots && chatPresentationInterfaceState.hasBotCommands {
-                        accessoryItems.append(.commands)
-                    }
-                    accessoryItems.append(.stickers(stickersEnabled))
-                    if let message = chatPresentationInterfaceState.keyboardButtonsMessage, let _ = message.visibleButtonKeyboardMarkup, chatPresentationInterfaceState.interfaceState.messageActionsState.dismissedButtonKeyboardMessageId != message.id {
-                        accessoryItems.append(.inputButtons)
-                    }
-                }
-                
-                // TODO: Wellgram 判断开关
-//                let sharedData = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.translationSettings])
-//                |> map { sharedData -> TranslationSettings in
-//
-//                    let translationSettings: TranslationSettings
-//                    if let current = sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) {
-//                        translationSettings = current
-//                    } else {
-//                        translationSettings = TranslationSettings.defaultSettings
-//                    }
-//                    if accessoryItems.count == 0 {//如果有输入文本，则accessoryItems是空数组的，因此用数组的长度判断是否出现翻译按钮
-//                        accessoryItems.append(.wgTranslate)
-//                    }
-//                    return translationSettings
-//                }
-                
-//                if accessoryItems.count == 0 {//如果有输入文本，则accessoryItems是空数组的，因此用数组的长度判断是否出现翻译按钮
-//                    accessoryItems.append(.wgTranslate)
-//                }
-                return ChatTextInputPanelState(accessoryItems: accessoryItems, contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
+    case .media:
+        accessoryItems.append(.keyboard)
+        return ChatTextInputPanelState(accessoryItems: accessoryItems, contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
+    case .inputButtons:
+        return ChatTextInputPanelState(accessoryItems: [.keyboard], contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
+    case .none, .text:
+        if let _ = chatPresentationInterfaceState.interfaceState.editMessage {
+            return ChatTextInputPanelState(accessoryItems: [], contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
+        } else {
+            var accessoryItems: [ChatTextInputAccessoryItem] = []
+            var extendedSearchLayout = false
+        loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
+            if case let .contextRequestResult(peer, _) = result, peer != nil {
+                extendedSearchLayout = true
+                break loop
             }
+        }
+            if !extendedSearchLayout {
+                if case .scheduledMessages = chatPresentationInterfaceState.subject {
+                } else if chatPresentationInterfaceState.renderedPeer?.peerId != context.account.peerId {
+                    if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramSecretChat, chatPresentationInterfaceState.interfaceState.composeInputState.inputText.length == 0 {
+                        accessoryItems.append(.messageAutoremoveTimeout(peer.messageAutoremoveTimeout))
+                    } else if currentAutoremoveTimeout != nil && chatPresentationInterfaceState.interfaceState.composeInputState.inputText.length == 0 {
+                        accessoryItems.append(.messageAutoremoveTimeout(currentAutoremoveTimeout))
+                    }
+                }
+            }
+            
+            if chatPresentationInterfaceState.interfaceState.composeInputState.inputText.length == 0 && chatPresentationInterfaceState.interfaceState.forwardMessageIds == nil {
+                if chatPresentationInterfaceState.hasScheduledMessages {
+                    accessoryItems.append(.scheduledMessages)
+                }
+                
+                var stickersEnabled = true
+                if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramChannel {
+                    if case .broadcast = peer.info, canSendMessagesToPeer(peer) {
+                        accessoryItems.append(.silentPost(chatPresentationInterfaceState.interfaceState.silentPosting))
+                    }
+                    if peer.hasBannedPermission(.banSendStickers) != nil {
+                        stickersEnabled = false
+                    }
+                } else if let peer = chatPresentationInterfaceState.renderedPeer?.peer as? TelegramGroup {
+                    if peer.hasBannedPermission(.banSendStickers) {
+                        stickersEnabled = false
+                    }
+                }
+                if chatPresentationInterfaceState.hasBots && chatPresentationInterfaceState.hasBotCommands {
+                    accessoryItems.append(.commands)
+                }
+                accessoryItems.append(.stickers(stickersEnabled))
+                if let message = chatPresentationInterfaceState.keyboardButtonsMessage, let _ = message.visibleButtonKeyboardMarkup, chatPresentationInterfaceState.interfaceState.messageActionsState.dismissedButtonKeyboardMessageId != message.id {
+                    accessoryItems.append(.inputButtons)
+                }
+            }
+            
+            // TODO: Wellgram 判断开关
+            
+            let semaphoreSignal = DispatchSemaphore(value: 0)
+            let dataSignal: Signal<TelegramCore.AccountSharedDataView<TelegramCore.TelegramAccountManagerTypes>, SwiftSignalKit.NoError> = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.translationSettings])
+            let _ = dataSignal.start { sharedData in
+                let translationSettings: TranslationSettings
+                if let current = sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) {
+                    translationSettings = current
+                } else {
+                    translationSettings = TranslationSettings.defaultSettings
+                }
+                if translationSettings.showWgSendTranslate && accessoryItems.count == 0 {
+                    accessoryItems.append(.wgTranslate)
+                }
+                semaphoreSignal.signal()
+            } error: { error in
+                semaphoreSignal.signal()
+            } completed: {
+                semaphoreSignal.signal()
+            }
+            semaphoreSignal.wait()
+            return ChatTextInputPanelState(accessoryItems: accessoryItems, contextPlaceholder: contextPlaceholder, mediaRecordingState: chatPresentationInterfaceState.inputTextPanelState.mediaRecordingState)
+        }
     }
 }
