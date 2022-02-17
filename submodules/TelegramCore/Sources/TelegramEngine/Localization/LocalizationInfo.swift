@@ -27,6 +27,6 @@ public final class SuggestedLocalizationInfo {
 
 // MARK: Nicegram Chinese locales
 public let niceLocalizations: [LocalizationInfo] = [
-    LocalizationInfo(languageCode: "zhcncc", baseLanguageCode: "zh-hans-raw", customPluralizationCode: "zh", title: "Chinese (Simplified) @congcong", localizedTitle: "简体中文 (聪聪)", isOfficial: false, totalStringCount: 3178, translatedStringCount: 3173, platformUrl: "https://translations.telegram.org/zhcncc/"),
-    LocalizationInfo(languageCode: "taiwan", baseLanguageCode: "zh-hant-raw", customPluralizationCode: "zh", title: "Chinese (zh-Hant-TW)", localizedTitle: "正體中文", isOfficial: false, totalStringCount: 3178, translatedStringCount: 3173, platformUrl: "https://translations.telegram.org/taiwan/")
+    LocalizationInfo(languageCode: "zhcncc", baseLanguageCode: "zh-hans-raw", customPluralizationCode: "zh", title: "Chinese (Simplified)", localizedTitle: "简体中文", isOfficial: false, totalStringCount: 3178, translatedStringCount: 3173, platformUrl: "https://translations.telegram.org/zhcncc/"),
+    LocalizationInfo(languageCode: "taiwan", baseLanguageCode: "zh-hant-raw", customPluralizationCode: "zh", title: "Chinese (Traditional)", localizedTitle: "正體中文", isOfficial: false, totalStringCount: 3178, translatedStringCount: 3173, platformUrl: "https://translations.telegram.org/taiwan/")
 ]

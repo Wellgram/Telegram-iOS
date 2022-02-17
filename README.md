@@ -51,6 +51,14 @@ python3 build-system/Make/Make.py \
     --configurationPath="$HOME/telegram-configuration" \
     --buildNumber=100001 \
     --configuration=release_universal
+    
+python3 build-system/Make/Make.py \
+    --bazel="$HOME/bazel-dist/bazel" \
+    --cacheDir="$HOME/telegram-bazel-cache" \
+    build \
+    --configurationPath="build-system/example-configuration" \
+    --buildNumber=100001 \
+    --configuration=release_universal
 ```
 
 6. (Optional) Generate an Xcode project 创建xcodeproject文件，一般只执行这个创建工程项目，之后直接打开

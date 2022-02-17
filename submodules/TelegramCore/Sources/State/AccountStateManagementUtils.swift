@@ -2497,11 +2497,12 @@ func replayFinalState(
                                     }
                                 }
                             }
+                            if id.peerId.namespace == Namespaces.Peer.CloudUser {
+                                isChat = true
+                            }
                         }
                         
-                        isChat = true
                         // TODO: Wellgram 全局实时翻译，目前默认翻译成英文。
-                        
                         if !message.text.isEmpty && isChat == true {
                             
                             var isAutoTranslate = false
@@ -3052,7 +3053,7 @@ func replayFinalState(
                 updatePeerPresences(transaction: transaction, accountPeerId: accountPeerId, peerPresences: presences)
             case let .UpdateSecretChat(chat, _):
                 updateSecretChat(encryptionProvider: encryptionProvider, accountPeerId: accountPeerId, transaction: transaction, mediaBox: mediaBox, chat: chat, requestData: nil)
-            case let .AddSecretMessages(messages):
+            case let .AddSecretMessages(messages)://TODO: Wellgram 私密聊天需要添加自动翻译
                 for message in messages {
                     let peerId = message.peerId
                     transaction.operationLogAddEntry(peerId: peerId, tag: OperationLogTags.SecretIncomingEncrypted, tagLocalIndex: .automatic, tagMergedIndex: .none, contents: SecretChatIncomingEncryptedOperation(message: message))

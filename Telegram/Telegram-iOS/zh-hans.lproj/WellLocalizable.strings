@@ -62,9 +62,9 @@
 "NGWeb.Blocked" = "依据 App Store 审核指南，在 Nicegram 中不可用";
 
 /*WGStrings*/
-"WGStrings.AutoTranslate" = "单聊内容自动翻译";
-"WGStrings.HandTranslate" = "聊天内容手动翻译";
-"WGStrings.SendTranslate" = "文本消息发送时翻译";
+"WGStrings.AutoTranslate" = "单聊、群聊开启翻译";
+"WGStrings.HandTranslate" = "单聊开启自动翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
 
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/

@@ -2463,6 +2463,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
     /// 显示翻译框
     func showWgTranslate() {
         
+        self.isTranslateSend = true
         self.view.endEditing(true)
         
         let width = self.frame.size.width
@@ -2470,7 +2471,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         
         if self.theTranslateNode != nil {
             if let translateBeforeText = self.theLbTranslateBefore.attributedText?.string, let textInputPanelNodeText = self.textInputPanelNode?.text, translateBeforeText != textInputPanelNodeText {
-                self.theLbTranslateBefore.attributedText = NSAttributedString(string: translateBeforeText, font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
+                self.theLbTranslateBefore.attributedText = NSAttributedString(string: textInputPanelNodeText, font: .systemFont(ofSize: 15), textColor: .black, paragraphAlignment: .left)
                 updateTranslateAfter(title: "")
             }
             self.theTranslateNode.isHidden = false
@@ -2630,7 +2631,6 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
     ///发送翻译文本
     @objc func btnSendTranslateAction() {
         if self.theLbTranslateAfter.attributedText?.string.count ?? 0 > 0 {
-            self.isTranslateSend = true
             self.theTranslateNode.isHidden = true
             self.textInputPanelNode?.text = self.theLbTranslateAfter.attributedText?.string ?? ""
             self.textInputPanelNode?.sendButtonPressed()
@@ -2642,6 +2642,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
     ///根据messageId对对应message的bubble进行修改
     func transactionWithId(messageId: MessageId) {
         if isTranslateSend {
+            self.isTranslateSend = false
             let newMessageText = self.theLbTranslateBefore.attributedText!.string + "\n\n\(gTranslateSeparator)\n" + self.theLbTranslateAfter.attributedText!.string
             let _ = (self.context.account.postbox.transaction { transaction -> Void in
                 transaction.updateMessage(messageId, update: { currentMessage in

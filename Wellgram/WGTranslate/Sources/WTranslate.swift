@@ -2,7 +2,7 @@ import SwiftSignalKit
 import UIKit
 import WGData
 ///文本中带有gTranslateSeparator文本内容即代表已经完成翻译
-public var gTranslateSeparator = " 👇👇👇 "
+public var gTranslateSeparator = " 翻译👇 "
 
 public func getTranslateUrl(_ message: String,_ toLang: String) -> String {
     var sanitizedMessage = message.replaceCharactersFromSet(characterSet:CharacterSet.newlines, replacementString: "¦")
