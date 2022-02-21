@@ -1,0 +1,35 @@
+"AppName" = "Wellgram";
+
+/*Nice Features*/
+"NiceFeatures.Tabs.Header" = "Label";
+"NiceFeatures.Tabs.ShowContacts" = "Tunjukkan tab <Kenalan>";
+"NiceFeatures.Folders.Header" = "berkumpulan";
+"NiceFeatures.Folders.TgFolders" = "Kumpulan ditunjukkan di bahagian bawah";
+"NiceFeatures.Folders.TgFolders.Notice" = "Senarai berkumpulan gaya iOS";
+"NiceFeatures.RoundVideos.Header" = "video pekeliling";
+"NiceFeatures.RoundVideos.UseRearCamera" = "Gunakan kamera belakang";
+
+/*Open Pin*/
+"NiceFeatures.Notifications.HideNotifyAccount" = "Sembunyikan akaun daripada pemberitahuan";
+"NiceFeatures.Notifications.HideNotifyAccountNotice" = "Apabila anda telah menambah berbilang akaun dalam tetapan, maklumat akaun anda tidak akan dipaparkan dalam pemberitahuan.";
+
+/*Common*/
+"NiceFeatures.Tabs.ShowNames" = "Tunjukkan nama tag";
+"Chat.ForwardAsCopy" = "Ke hadapan tanpa petikan";
+
+/*Folder*/
+"NiceFeatures.HideNumber" = "Sembunyikan nombor telefon bimbit dalam tetapan";
+
+/*NicegramSettings*/
+"NicegramSettings.Other.hidePhoneInSettingsNotice" = "Nombor telefon anda hanya akan disembunyikan dalam antara muka tetapan, untuk menyembunyikannya daripada pengguna lain, sila gunakan tetapan privasi.";
+
+//定制-语言本地化
+/*翻译功能*/
+"WGStrings.AutoTranslate" = "Auto terjemah untuk sembang";
+"WGStrings.HandTranslate" = "Terjemahan manual untuk mesej";
+"WGStrings.SendTranslate" = "Tunjukkan terjemahan semasa menghantar mesej";
+"WGStrings.CloseSingleAutoTranslate" = "Matikan terjemahan automatik";
+"WGStrings.OpenSingleAutoTranslate" = "Hidupkan terjemahan automatik";
+"Messages.Translate" = "Menterjemah";
+"Messages.SendTranslate" = "Hantar";
+"Messages.UndoTranslate" = "Buat asal terjemahan";

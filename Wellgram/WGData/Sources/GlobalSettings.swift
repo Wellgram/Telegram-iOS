@@ -18,7 +18,7 @@ public struct TranslateRule: Codable {
 }
 ///全局设置GWGSettings()，gmod、youtube_pip、qr_login_camera、gmod2、gmod3、translate_rules（谷歌翻译网页解析规则）
 public var VarGWGSettings = GWGSettings()
-// MARK: Wellgram repository
+//定制-全局配置 根据仓库名进行更改，需要从仓库获取数据
 public let WGRepository = "Wellgram"
 
 public class GWGSettings {
@@ -156,4 +156,21 @@ public func updateGlobalNGSettings(_ build: String = (Bundle.main.infoDictionary
     }, error: { _ in
         NSLog("HTTP error \(build)")
     })
+}
+
+public var theSingleAutoTranslates: [String]?
+
+///获取沙盒数据
+public func readSingleAutoTranslates() -> [String] {
+    if theSingleAutoTranslates != nil {
+        return theSingleAutoTranslates!
+    }
+    theSingleAutoTranslates = UserDefaults.standard.object(forKey: "SingleAutoTranslate") as? [String] ?? []
+    return theSingleAutoTranslates!
+}
+///保存沙盒数据
+public func writeSingleAutoTranslates(value: [String]) {
+    theSingleAutoTranslates = value
+    UserDefaults.standard.set(value, forKey: "SingleAutoTranslate")
+    UserDefaults.standard.synchronize()
 }

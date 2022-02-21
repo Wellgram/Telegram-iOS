@@ -17,7 +17,7 @@ import UndoUI
 import TelegramUIPreferences
 import Translate
 
-// MARK: Wellgram Import
+//定制-导入头文件
 import WGStrings
 
 private enum LanguageListSection: ItemListSectionId {
@@ -102,7 +102,7 @@ private enum LanguageListEntry: Comparable, Identifiable {
     static func <(lhs: LanguageListEntry, rhs: LanguageListEntry) -> Bool {
        return lhs.index() < rhs.index()
     }
-    
+    //定制-函数新增代码 新增
     func item(presentationData: PresentationData, searchMode: Bool, openSearch: @escaping () -> Void, toggleShowTranslate: @escaping (Bool) -> Void, openDoNotTranslate: @escaping () -> Void, toggleShowWgAutoTranslate: @escaping (Bool) -> Void, toggleShowWgHandTranslate: @escaping (Bool) -> Void, toggleShowWgSendTranslate: @escaping (Bool) -> Void, selectLocalization: @escaping (LocalizationInfo) -> Void, setItemWithRevealedOptions: @escaping (String?, String?) -> Void, removeItem: @escaping (String) -> Void) -> ListViewItem {
         switch self {
             case let .translateTitle(text):
@@ -117,18 +117,20 @@ private enum LanguageListEntry: Comparable, Identifiable {
                 })
             case let .translateInfo(text):
                 return ItemListTextItem(presentationData: ItemListPresentationData(presentationData), text: .plain(text), sectionId: LanguageListSection.translate.rawValue)
-        case let .wgAutoTranslate(text, value):
-            return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
-                toggleShowWgAutoTranslate(value)
-            })
-        case let .wgHandTranslate(text, value):
-            return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
-                toggleShowWgHandTranslate(value)
-            })
-        case let .wgSendTranslate(text, value):
-            return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
-                toggleShowWgSendTranslate(value)
-            })
+            //定制-新增代码逻辑
+            case let .wgAutoTranslate(text, value):
+                return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
+                    toggleShowWgAutoTranslate(value)
+                })
+            case let .wgHandTranslate(text, value):
+                return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
+                    toggleShowWgHandTranslate(value)
+                })
+            case let .wgSendTranslate(text, value):
+                return ItemListSwitchItem(presentationData: ItemListPresentationData(presentationData), title: text, value: value, sectionId: LanguageListSection.translate.rawValue, style: .blocks, updated: { value in
+                    toggleShowWgSendTranslate(value)
+                })
+            //
             case let .localizationTitle(text, section):
                 return ItemListSectionHeaderItem(presentationData: ItemListPresentationData(presentationData), text: text, sectionId: section)
             case let .localization(_, info, type, selected, activity, revealed, editing):
@@ -147,7 +149,7 @@ private struct LocalizationListSearchContainerTransition {
     let updates: [ListViewUpdateItem]
     let isSearching: Bool
 }
-
+//定制-函数新增代码 新增toggleShowTranslate、toggleShowWgAutoTranslate、toggleShowWgHandTranslate
 private func preparedLanguageListSearchContainerTransition(presentationData: PresentationData, from fromEntries: [LanguageListEntry], to toEntries: [LanguageListEntry], selectLocalization: @escaping (LocalizationInfo) -> Void, isSearching: Bool, forceUpdate: Bool) -> LocalizationListSearchContainerTransition {
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries, allUpdated: forceUpdate)
     
@@ -339,7 +341,7 @@ private struct LanguageListNodeTransition {
     let animated: Bool
     let crossfade: Bool
 }
-
+//定制-函数新增代码 新增toggleShowWgAutoTranslate、toggleShowWgHandTranslate、toggleShowWgSendTranslate
 private func preparedLanguageListNodeTransition(presentationData: PresentationData, from fromEntries: [LanguageListEntry], to toEntries: [LanguageListEntry], openSearch: @escaping () -> Void, toggleShowTranslate: @escaping (Bool) -> Void, openDoNotTranslate: @escaping () -> Void, toggleShowWgAutoTranslate: @escaping (Bool) -> Void, toggleShowWgHandTranslate: @escaping (Bool) -> Void, toggleShowWgSendTranslate: @escaping (Bool) -> Void, selectLocalization: @escaping (LocalizationInfo) -> Void, setItemWithRevealedOptions: @escaping (String?, String?) -> Void, removeItem: @escaping (String) -> Void, firstTime: Bool, isLoading: Bool, forceUpdate: Bool, animated: Bool, crossfade: Bool) -> LanguageListNodeTransition {
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries, allUpdated: forceUpdate)
     
@@ -382,7 +384,7 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
             self.isEditing.set(self.isEditingValue)
         }
     }
-    
+    //定制-函数新增代码
     init(context: AccountContext, presentationData: PresentationData, navigationBar: NavigationBar, requestActivateSearch: @escaping () -> Void, requestDeactivateSearch: @escaping () -> Void, updateCanStartEditing: @escaping (Bool?) -> Void, present: @escaping (ViewController, Any?) -> Void, push: @escaping (ViewController) -> Void) {
         self.context = context
         self.presentationData = presentationData
@@ -464,7 +466,7 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 activeLanguageCode = localizationSettings.primaryComponent.languageCode
             }
             var existingIds = Set<String>()
-            
+            //定制-新增代码逻辑 添加自动翻译、手动翻译、发送翻译按钮开关
             // 默认开关状态
             var showWgAutoTranslate = false
             var showWgHandTranslate = false
@@ -589,17 +591,17 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
                 if let strongSelf = self {
                     strongSelf.push(translationSettingsController(context: strongSelf.context))
                 }
-            }, toggleShowWgAutoTranslate: { value in
+            }, toggleShowWgAutoTranslate: { value in //自动翻译
                 let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
                     let updated = current.withUpdatedShowWgAutoTranslate(value)
                     return updated
                 }).start()
-            }, toggleShowWgHandTranslate: { value in
+            }, toggleShowWgHandTranslate: { value in //手动翻译
                 let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
                     let updated = current.withUpdatedShowWgHandTranslate(value)
                     return updated
                 }).start()
-            }, toggleShowWgSendTranslate: { value in
+            }, toggleShowWgSendTranslate: { value in //发送翻译
                 let _ = updateTranslationSettingsInteractively(accountManager: context.sharedContext.accountManager, { current in
                     let updated = current.withUpdatedShowWgSendTranslate(value)
                     return updated

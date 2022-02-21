@@ -61,6 +61,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "Nicht verfügbar in Nicegram wegen AppStore Richtlinien";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "Aktivieren Sie die automatische Übersetzung für Einzelchats";
+"WGStrings.HandTranslate" = "Einzelchat, Gruppenchat, um mit der Übersetzung zu beginnen";
+"WGStrings.SendTranslate" = "Nachricht senden, um Übersetzung zu öffnen";
+"WGStrings.CloseSingleAutoTranslate" = "Deaktivieren Sie die automatische Übersetzung";
+"WGStrings.OpenSingleAutoTranslate" = "Aktivieren Sie die automatische Übersetzung";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "Bitte verwenden Sie «%1» um den Standardbrowser zu konfigurieren";
@@ -103,17 +110,9 @@
 "ManageFilters.Header" = "VERFÜGBAREN FILTER VERFÜGBAREN";
 
 "Messages.Translate" = "Übersetzen";
-"Messages.SendTranslate" = "Send";
+"Messages.SendTranslate" = "Schicken";
 "Messages.UndoTranslate" = "Rückgängig übersetzen";
 "Messages.TranslateError" = "Die Übersetzung ist leider nicht verfügbar.";
-
-/*NG Lab Registration Date*/
-"NGLab.RegDate.Btn" = "Anmeldedatum";
-"NGLab.RegDate.Title" = "Anmeldedatum";
-"NGLab.RegDate.Notice" = "Dies ist ein ungefähres Datum";
-"NGLab.RegDate.MenuItem" = "registriert";
-"NGLab.RegDate.FetchError" = "Leider kann das Registrierungsdatum nicht abgerufen werden.";
-"NGLab.BadDeviceToken" = "[iOS 11+] Gerät kann nicht verifiziert werden.";
 
 /*Backup Settings*/
 "NiceFeatures.BackupIcloud" = "Einstellungen & Ordner mit iCloud synchronisieren";

@@ -322,8 +322,7 @@ loop: for (_, result) in chatPresentationInterfaceState.inputQueryResults {
                 }
             }
             
-            // TODO: Wellgram 判断开关
-            
+            //定制-新增代码逻辑 判断发送消息翻译按钮是否开启，如果开启且输入框内有文字则显示翻译按钮
             let semaphoreSignal = DispatchSemaphore(value: 0)
             let dataSignal: Signal<TelegramCore.AccountSharedDataView<TelegramCore.TelegramAccountManagerTypes>, SwiftSignalKit.NoError> = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.translationSettings])
             let _ = dataSignal.start { sharedData in

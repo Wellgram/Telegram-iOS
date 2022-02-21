@@ -1,4 +1,4 @@
-// MARK: Wellgram imports
+//定制-导入头文件
  import WGData
  import WGStrings
  //
@@ -428,7 +428,7 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         
         let baseAppBundleId = Bundle.main.bundleIdentifier!
         let appGroupName = "group.\(baseAppBundleId)"
-        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
+        let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)//URL(string: NSSearchPathForDirectoriesInDomains(.libraryDirectory, .allDomainsMask, true).first ?? "")//
         
         let buildConfig = BuildConfig(baseAppBundleId: baseAppBundleId)
         self.buildConfig = buildConfig
@@ -1397,25 +1397,25 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         self.isInForegroundPromise.set(true)
         self.isActiveValue = true
         self.isActivePromise.set(true)
-
+        
         self.resetBadge()
         
         self.maybeCheckForUpdates()
         
-        // MARK: Wellgram fetch
+        //定制-新增代码逻辑 拉取github上的数据
         Queue().async {
             self.fetchGlobalNGSettings()
         }
-
+        
         let _ = (self.context.get()
-        |> take(1)
-        |> deliverOnMainQueue).start(next: { context in
+                 |> take(1)
+                 |> deliverOnMainQueue).start(next: { context in
             if let context = context {
                 Queue().async {
                     let presentationData = context.context.sharedContext.currentPresentationData.with({ $0 })
                     self.fetchNGUserSettings(context.context.account.peerId.id._internalGetInt64Value())
                     self.fetchLocale(lang: presentationData.strings.baseLanguageCode)
-         }
+                }
             }
         })
         //
@@ -2201,19 +2201,23 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
         completionHandler()
     }
     
+    //定制-新增函数
+    ///
     private func fetchNGUserSettings(_ userId: Int64) {
-             updateNGInfo(userId: userId)
-         }
-         ///抓取全局数据
-         private func fetchGlobalNGSettings() {
-             updateGlobalNGSettings()
-         }
-
-         private func fetchLocale(lang: String) {
-     //        #if !targetEnvironment(simulator)
-             downloadLocale(lang)
-     //        #endif
-         }
+        updateNGInfo(userId: userId)
+    }
+    ///抓取全局数据
+    private func fetchGlobalNGSettings() {
+        updateGlobalNGSettings()
+    }
+    
+    ///抓取本地化语言包
+    private func fetchLocale(lang: String) {
+        #if !targetEnvironment(simulator)
+            downloadLocale(lang)
+        #endif
+    }
+    //
 
     private var lastCheckForUpdatesTimestamp: Double?
     private let currentCheckForUpdatesDisposable = MetaDisposable()

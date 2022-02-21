@@ -61,6 +61,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "Indisponível no Nicegram devido às diretrizes da AppStore";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "单聊开启自动翻译";
+"WGStrings.HandTranslate" = "单聊、群聊开启翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
+"WGStrings.CloseSingleAutoTranslate" = "关闭自动翻译";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "Por favor, use «%1» para configurar o navegador padrão";
@@ -103,17 +110,9 @@
 "ManageFilters.Header" = "CONFIGURAR FILTROS DISPONÍVEIS";
 
 "Messages.Translate" = "Traduzir";
-"Messages.SendTranslate" = "Send";
+"Messages.SendTranslate" = "Mandar";
 "Messages.UndoTranslate" = "Desfazer Tradução";
 "Messages.TranslateError" = "Desculpe, tradução indisponível.";
-
-/*NG Lab Registration Date*/
-"NGLab.RegDate.Btn" = "Obter Data de Registro";
-"NGLab.RegDate.Title" = "Data de Registro";
-"NGLab.RegDate.Notice" = "Esta é uma data aproximada";
-"NGLab.RegDate.MenuItem" = "registrado";
-"NGLab.RegDate.FetchError" = "Desculpe, não foi possível obter a data de registro.";
-"NGLab.BadDeviceToken" = "Incapaz de verificar o dispositivo.";
 
 /*Backup Settings*/
 "NiceFeatures.BackupIcloud" = "Sincronizar configurações e pastas com o iCloud";

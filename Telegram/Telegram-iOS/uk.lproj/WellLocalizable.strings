@@ -1,81 +1,35 @@
 "AppName" = "Wellgram";
 
-/*ChatFilter*/
-"ChatFilter.Bots" = "Боти";
-"ChatFilter.Channels" = "Канали";
-"ChatFilter.Private" = "Користувачі";
-"ChatFilter.Groups" = "Групи";
-"ChatFilter.Unread" = "Непрочитане";
-"ChatFilter.Unmuted" = "Нотифiкувати";
-"ChatFilter.Favourites" = "Обране";
-
 /*Nice Features*/
-"NiceFeatures.Title" = "Nicegram";
 "NiceFeatures.Tabs.Header" = "ВКЛАДКИ";
 "NiceFeatures.Tabs.ShowContacts" = "Показувати контакти";
+"NiceFeatures.Folders.Header" = "групування";
+"NiceFeatures.Folders.TgFolders" = "Групи відображаються внизу";
+"NiceFeatures.Folders.TgFolders.Notice" = "Згрупований список у стилі iOS";
 "NiceFeatures.ChatScreen.Header" = "ВIКНО ЧАТУ";
 "NiceFeatures.ChatScreen.AnimatedStickers" = "Анiмованi стiкери";
 
-/*Save to Cloud*/
-"Chat.SaveToCloud" = "Зберегти До Хмари";
-
 /*Open Pin*/
-"Chat.OpenPin" = "Показати Пiн";
-"ChatFilter.Admin" = "";
-"NiceFeatures.Notifications.Fix" = "Вимкнути небажані оповістки";
-"NiceFeatures.Notifications.FixNotice" = "Допомагає, коли ви отримуєте оповістки від заглушених чатів. Відповіді з оповісток, назви акаунтів і попередній перегляд медіа буде недоступний";
-"NiceFeatures.Filters.Header" = "";
-"NiceFeatures.Filters.Notice" = "";
+"NiceFeatures.Notifications.HideNotifyAccount" = "Приховати обліковий запис від сповіщень";
+"NiceFeatures.Notifications.HideNotifyAccountNotice" = "Якщо ви додали кілька облікових записів у налаштуваннях, інформація про ваш обліковий запис не відображатиметься в сповіщеннях.";
 
 /*Common*/
-"Common.ExitNow" = "";
-"Common.Later" = "";
-"Common.RestartRequired" = "";
-"NiceFeatures.Tabs.ShowNames" = "";
-"Chat.ForwardAsCopy" = "";
+"NiceFeatures.Tabs.ShowNames" = "показати назву тегу";
+"Chat.ForwardAsCopy" = "Вперед без посилань";
 
 /*Folder*/
-"Folder.DefaultName" = "";
-"Folder.New" = "";
-"Folder.Created" = "";
-"Folder.AddToExisting" = "";
-"Folder.Updated" = "";
-"Folder.Create" = "";
-"Folder.Create.Name" = "";
-"Folder.Create.Placeholder" = "";
-"Folder.LimitExceeded" = "";
-"NiceFeatures.HideNumber" = "";
+"NiceFeatures.HideNumber" = "приховати номер мобільного в налаштуваннях";
 
-/*NGWeb*/
-"NGWeb.Blocked" = "";
+/*NicegramSettings*/
+"NicegramSettings.Other.hidePhoneInSettingsNotice" = "Ваш номер телефону буде приховано лише в інтерфейсі налаштувань, щоб приховати його від інших користувачів, скористайтеся налаштуваннями конфіденційності.";
 
-/*Browser*/
-"NiceFeatures.Browser.Header" = "";
-"NiceFeatures.Browser.UseBrowser" = "";
-"NiceFeatures.Browser.UseBrowserNotice" = "";
-"ChatFilter.Missed" = "";
-
-/*Premium*/
-"Premium.Title" = "";
-"Premium.UnlimitedPins.Header" = "";
-"Premium.SyncPins" = "";
-"Premium.SyncPins.Notice.ON" = "";
-"Premium.SyncPins.Notice.OFF" = "";
-"Premium.Missed.Header" = "";
-"Premium.Missed" = "";
-"Premium.Missed.Notice" = "";
-"Folder.DeleteAsk" = "";
-"Folder.NeedPremium" = "";
-"Common.SupportChatUsername" = "nicegram_ru";
-"Common.FAQUrl" = "https://nicegram.app/ru/faq/";
-"Common.FAQ.Button" = "";
-"Common.FAQ.Intro" = "";
-"IAP.Premium.Title" = "";
-"IAP.Premium.Subtitle" = "";
-"IAP.Premium.Features" = "";
-"IAP.Premium.Activated" = "";
-"IAP.Common.Restore" = "";
-"IAP.Common.CantPay" = "";
-"IAP.Common.ErrorFetch" = "";
-"IAP.Common.Congrats" = "";
-"IAP.Common.ValidateError" = "";
+//定制-语言本地化
+/*翻译模块*/
+"WGStrings.AutoTranslate" = "Автоматичний переклад для чату";
+"WGStrings.HandTranslate" = "Ручний переклад повідомлення";
+"WGStrings.SendTranslate" = "показувати переклад під час обміну повідомленнями";
+"WGStrings.CloseSingleAutoTranslate" = "Вимкніть автоматичний переклад";
+"WGStrings.OpenSingleAutoTranslate" = "Увімкніть автоматичний переклад";
+"Messages.Translate" = "Çevir";
+"Messages.SendTranslate" = "Göndermek";
+"Messages.UndoTranslate" = "Çeviriyi Geri Al";

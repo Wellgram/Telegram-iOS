@@ -4,7 +4,7 @@ load(
     "@build_configuration//:variables.bzl",
     "telegram_bundle_id",
 )
-
+#定制-BUILD文件
 WGDEPS = ["//Wellgram/WGData:WGData", "//Wellgram/WGWebUtils:WGWebUtils", "//Wellgram/WGStrings:WGStrings", "//Wellgram/WGTranslate:WGTranslate"]
 
 filegroup(

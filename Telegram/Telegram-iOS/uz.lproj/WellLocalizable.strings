@@ -1,0 +1,35 @@
+"AppName" = "Wellgram";
+
+/*Nice Features*/
+"NiceFeatures.Tabs.Header" = "Yorliq";
+"NiceFeatures.Tabs.ShowContacts" = "<Kontakt> yorlig'ini ko'rsatish";
+"NiceFeatures.Folders.Header" = "Guruhlash";
+"NiceFeatures.Folders.TgFolders" = "Guruhlar pastki qismida ko'rsatilgan";
+"NiceFeatures.Folders.TgFolders.Notice" = "iOS uslubidagi guruhlangan ro'yxat";
+"NiceFeatures.RoundVideos.Header" = "Dumaloq video";
+"NiceFeatures.RoundVideos.UseRearCamera" = "Orqa kameradan foydalaning";
+
+/*Open Pin*/
+"NiceFeatures.Notifications.HideNotifyAccount" = "Hisobni bildirishnomalardan yashirish";
+"NiceFeatures.Notifications.HideNotifyAccountNotice" = "Sozlamalarda bir nechta hisob qo'shsangiz, hisob ma'lumotlaringiz bildirishnomalarda ko'rsatilmaydi.";
+
+/*Common*/
+"NiceFeatures.Tabs.ShowNames" = "Teg nomini ko'rsatish";
+"Chat.ForwardAsCopy" = "Iqtibossiz oldinga";
+
+/*Folder*/
+"NiceFeatures.HideNumber" = "Sozlamalarda mobil raqamni yashirish";
+
+/*NicegramSettings*/
+"NicegramSettings.Other.hidePhoneInSettingsNotice" = "Telefon raqamingiz faqat sozlamalar interfeysida yashirin bo'ladi, uni boshqa foydalanuvchilardan yashirish uchun maxfiylik sozlamalaridan foydalaning.";
+
+//定制-语言本地化
+/*翻译功能*/
+"WGStrings.AutoTranslate" = "Suhbat uchun avtomatik tarjima";
+"WGStrings.HandTranslate" = "Xabar uchun qo'lda tarjima";
+"WGStrings.SendTranslate" = "Xabar yuborishda tarjimani ko'rsatish";
+"WGStrings.CloseSingleAutoTranslate" = "Avtomatik tarjimani o'chiring";
+"WGStrings.OpenSingleAutoTranslate" = "Avtomatik tarjimani yoqing";
+"Messages.Translate" = "Tarjima qiling";
+"Messages.SendTranslate" = "Yuborish";
+"Messages.UndoTranslate" = "Tarjimani bekor qilish";

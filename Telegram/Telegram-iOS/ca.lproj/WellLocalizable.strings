@@ -1,0 +1,35 @@
+"AppName" = "Wellgram";
+
+/*Nice Features*/
+"NiceFeatures.Tabs.Header" = "Etiqueta";
+"NiceFeatures.Tabs.ShowContacts" = "Mostra la pestanya <Contacte>";
+"NiceFeatures.Folders.Header" = "Agrupació";
+"NiceFeatures.Folders.TgFolders" = "Els grups es mostren a la part inferior";
+"NiceFeatures.Folders.TgFolders.Notice" = "Llista agrupada d'estil iOS";
+"NiceFeatures.RoundVideos.Header" = "Vídeo circular";
+"NiceFeatures.RoundVideos.UseRearCamera" = "Utilitzeu la càmera posterior";
+
+/*Open Pin*/
+"NiceFeatures.Notifications.HideNotifyAccount" = "Amaga el compte de les notificacions";
+"NiceFeatures.Notifications.HideNotifyAccountNotice" = "Quan hàgiu afegit diversos comptes a la configuració, la informació del vostre compte no es mostrarà a les notificacions.";
+
+/*Common*/
+"NiceFeatures.Tabs.ShowNames" = "Mostra el nom de l'etiqueta";
+"Chat.ForwardAsCopy" = "Endavant sense citació";
+
+/*Folder*/
+"NiceFeatures.HideNumber" = "Amagar el número de mòbil a la configuració";
+
+/*NicegramSettings*/
+"NicegramSettings.Other.hidePhoneInSettingsNotice" = "El vostre número de telèfon només s'amagarà a la interfície de configuració, per amagar-lo d'altres usuaris, utilitzeu la configuració de privadesa.";
+
+//定制-语言本地化
+/*翻译功能*/
+"WGStrings.AutoTranslate" = "Traducció automàtica per al xat";
+"WGStrings.HandTranslate" = "Traducció manual del missatge";
+"WGStrings.SendTranslate" = "Mostrar la traducció en enviar missatges";
+"WGStrings.CloseSingleAutoTranslate" = "Desactiva la traducció automàtica";
+"WGStrings.OpenSingleAutoTranslate" = "Activa la traducció automàtica";
+"Messages.Translate" = "Traduir";
+"Messages.SendTranslate" = "Enviar";
+"Messages.UndoTranslate" = "Desfer la traducció";

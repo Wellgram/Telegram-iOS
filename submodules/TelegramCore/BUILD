@@ -21,6 +21,7 @@ swift_library(
         "//submodules/Reachability:Reachability",
         "//Wellgram/WGStrings:WGStrings",
         "//Wellgram/WGTranslate:WGTranslate",
+        "//Wellgram/WGData:WGData",
     ],
     visibility = [
         "//visibility:public",

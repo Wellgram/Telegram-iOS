@@ -1,5 +1,5 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-
+#定制-BUILD文件
 WGDEPS = ["//Wellgram/WGData:WGData"]
 
 swift_library(

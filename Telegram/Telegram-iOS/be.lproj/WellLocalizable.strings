@@ -1,0 +1,35 @@
+"AppName" = "Wellgram";
+
+/*Nice Features*/
+"NiceFeatures.Tabs.Header" = "Этыкетка";
+"NiceFeatures.Tabs.ShowContacts" = "Паказаць ўкладку <Кантакт>";
+"NiceFeatures.Folders.Header" = "групоўка";
+"NiceFeatures.Folders.TgFolders" = "Групы паказаны ўнізе";
+"NiceFeatures.Folders.TgFolders.Notice" = "Згрупаваны спіс у стылі iOS";
+"NiceFeatures.RoundVideos.Header" = "кругавое відэа";
+"NiceFeatures.RoundVideos.UseRearCamera" = "Выкарыстоўвайце заднюю камеру";
+
+/*Open Pin*/
+"NiceFeatures.Notifications.HideNotifyAccount" = "Схаваць уліковы запіс ад апавяшчэнняў";
+"NiceFeatures.Notifications.HideNotifyAccountNotice" = "Калі вы дадалі некалькі ўліковых запісаў у наладах, інфармацыя аб вашым уліковым запісе не будзе адлюстроўвацца ў апавяшчэннях.";
+
+/*Common*/
+"NiceFeatures.Tabs.ShowNames" = "паказаць імя тэга";
+"Chat.ForwardAsCopy" = "Наперад без цытавання";
+
+/*Folder*/
+"NiceFeatures.HideNumber" = "схаваць нумар мабільнага тэлефона ў наладах";
+
+/*NicegramSettings*/
+"NicegramSettings.Other.hidePhoneInSettingsNotice" = "Ваш нумар тэлефона будзе схаваны толькі ў інтэрфейсе налад, каб схаваць яго ад іншых карыстальнікаў, выкарыстоўвайце налады прыватнасці.";
+
+//定制-语言本地化
+/*翻译功能*/
+"WGStrings.AutoTranslate" = "Аўтаматычны пераклад для чата";
+"WGStrings.HandTranslate" = "Пераклад паведамлення ўручную";
+"WGStrings.SendTranslate" = "паказваць пераклад падчас абмену паведамленнямі";
+"WGStrings.CloseSingleAutoTranslate" = "Адключыць аўтаматычны пераклад";
+"WGStrings.OpenSingleAutoTranslate" = "Уключыце аўтаматычны пераклад";
+"Messages.Translate" = "перакладаць";
+"Messages.SendTranslate" = "адправіць";
+"Messages.UndoTranslate" = "Адмяніць пераклад";

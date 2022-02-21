@@ -61,6 +61,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "Non disponibile su Nicegram a causa delle linee guida dell'App Store";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "单聊开启自动翻译";
+"WGStrings.HandTranslate" = "单聊、群聊开启翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
+"WGStrings.CloseSingleAutoTranslate" = "关闭自动翻译";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "Per favore, usa «%1» per configurare il tuo browser predefinito";
@@ -103,17 +110,9 @@
 "ManageFilters.Header" = "CONFIGURA FILTRI DISPONIBILI";
 
 "Messages.Translate" = "Traduci";
-"Messages.SendTranslate" = "Send";
+"Messages.SendTranslate" = "Inviare";
 "Messages.UndoTranslate" = "Annulla traduzione";
 "Messages.TranslateError" = "Spiacente, traduzione non disponibile.";
-
-/*NG Lab Registration Date*/
-"NGLab.RegDate.Btn" = "Ottieni data registrazione";
-"NGLab.RegDate.Title" = "Data registrazione";
-"NGLab.RegDate.Notice" = "Questa è una data approssimativa";
-"NGLab.RegDate.MenuItem" = "registrato";
-"NGLab.RegDate.FetchError" = "Spiacente, impossibile ottenere data registrazione.";
-"NGLab.BadDeviceToken" = "[iOS 11+] Impossibile verificare il dispositivo.";
 
 /*Backup Settings*/
 "NiceFeatures.BackupIcloud" = "Sincronizza impostazioni e cartelle con iCloud";

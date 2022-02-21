@@ -56,6 +56,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "به دلیل دستورالعمل های اپ استور ، انجام عملیات در نایس گرام مقدور نیست";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "单聊开启自动翻译";
+"WGStrings.HandTranslate" = "单聊、群聊开启翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
+"WGStrings.CloseSingleAutoTranslate" = "关闭自动翻译";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "لطفاً برای تنظیم مرورگر پیش فرض از «%1» استفاده کنید";
@@ -95,16 +102,10 @@
 "ManageFilters.Header" = "فیلترهای موجود را پیکربندی کنید";
 
 "Messages.Translate" = "ترجمه";
-"Messages.SendTranslate" = "Send";
+"Messages.SendTranslate" = "ارسال";
 "Messages.UndoTranslate" = "بازگردانی ترجمه";
 "Messages.TranslateError" = "متأسفیم، ترجمه در دسترس نیست.";
 
-/*NG Lab Registration Date*/
-"NGLab.RegDate.Btn" = "دریافت تاریخ ثبت نام";
-"NGLab.RegDate.Title" = "تاریخ ثبت‌نام";
-"NGLab.RegDate.Notice" = "تاریخ به صورت تقریبی درج می شود";
-"NGLab.RegDate.MenuItem" = "ثبت شد";
-"NGLab.RegDate.FetchError" = "متاسفانه دریافت تاریخ ثبت نام مقدور نیست.";
 "NiceFeatures.BackupSettings" = "تنظیمات پشتیبان گیری و پوشه ها";
 "NiceFeatures.BackupSettings.Done" = "تهیه نسخه پشتیبان از پیام های ذخیره شده کامل شد";
 "NiceFeatures.BackupSettings.Error" = "خطا در ایجاد نسخه پشتیبان";

@@ -2377,20 +2377,29 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         }
     }
     
-    //MARK: - Wellgram 发送翻译后的文本消息
+    //定制-全局属性
+    ///触摸隐藏视图
     var theTranslateNode: ASButtonNode!
+    ///翻译前文本显示
     var theLbTranslateBefore: ASEditableTextNode!
+    ///翻译后文本显示
     var theLbTranslateAfter: ASEditableTextNode!
-    
+    ///语言列表触摸隐藏视图
     var theLangBaseNode: ASButtonNode!
+    ///语言选择列表
     var theLangSelectView: ASScrollNode!
+    ///选中语言数据
     var theSelectLocalizableInfo: LocalizationInfo?
+    ///上一次选中语言按钮
     var theLastLangSelectNode: ASButtonNode!
     ///翻译语言列表数据
     var theLocalizableInfos: [LocalizationInfo]?
     ///是否通过按钮发送翻译
     var isTranslateSend = false
+    /// 翻译语言选择按钮
+    var theBtnSelectLang: ASButtonNode!
     
+    //定制-新增函数
     ///获取本地化数据
     func getLocalizableInfos() {
         if self.theLocalizableInfos == nil {
@@ -2457,10 +2466,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
         }
     }
     
-    /// 翻译语言选择按钮
-    var theBtnSelectLang: ASButtonNode!
-    
-    /// 显示翻译框
+    /// 显示翻译界面
     func showWgTranslate() {
         
         self.isTranslateSend = true
@@ -2656,7 +2662,7 @@ class ChatControllerNode: ASDisplayNode, UIScrollViewDelegate {//, ASTableViewDa
             }).start()
         }
     }
-    //MARK: - Wellgram end 发送翻译后的文本消息
+    //
     
     
     func sendCurrentMessage(silentPosting: Bool? = nil, scheduleTime: Int32? = nil, completion: @escaping () -> Void = {}) {

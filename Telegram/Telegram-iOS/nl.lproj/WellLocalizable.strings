@@ -1,0 +1,35 @@
+"AppName" = "Wellgram";
+
+/*Nice Features*/
+"NiceFeatures.Tabs.Header" = "Label";
+"NiceFeatures.Tabs.ShowContacts" = "Tabblad <Contact> tonen";
+"NiceFeatures.Folders.Header" = "Groepering";
+"NiceFeatures.Folders.TgFolders" = "Groepen worden onderaan weergegeven";
+"NiceFeatures.Folders.TgFolders.Notice" = "Gegroepeerde lijst in iOS-stijl";
+"NiceFeatures.RoundVideos.Header" = "Ronde video";
+"NiceFeatures.RoundVideos.UseRearCamera" = "Gebruik de achteruitrijcamera";
+
+/*Open Pin*/
+"NiceFeatures.Notifications.HideNotifyAccount" = "Account verbergen voor meldingen";
+"NiceFeatures.Notifications.HideNotifyAccountNotice" = "Als je meerdere accounts hebt toegevoegd in de instellingen, worden je accountgegevens niet weergegeven in meldingen.";
+
+/*Common*/
+"NiceFeatures.Tabs.ShowNames" = "Toon tagnaam";
+"Chat.ForwardAsCopy" = "Doorsturen zonder bronvermelding";
+
+/*Folder*/
+"NiceFeatures.HideNumber" = "Verberg mobiel nummer in instellingen";
+
+/*NicegramSettings*/
+"NicegramSettings.Other.hidePhoneInSettingsNotice" = "Uw telefoonnummer wordt alleen verborgen in de instellingeninterface. Gebruik de privacy-instellingen om het voor andere gebruikers te verbergen.";
+
+//定制-语言本地化
+/*翻译功能*/
+"WGStrings.AutoTranslate" = "Automatisch vertalen voor chat";
+"WGStrings.HandTranslate" = "Handmatige vertaling voor bericht";
+"WGStrings.SendTranslate" = "Vertaling weergeven bij berichten";
+"WGStrings.CloseSingleAutoTranslate" = "Automatische vertaling uitschakelen";
+"WGStrings.OpenSingleAutoTranslate" = "Automatische vertaling inschakelen";
+"Messages.Translate" = "Vertalen";
+"Messages.SendTranslate" = "Versturen";
+"Messages.UndoTranslate" = "Vertaling ongedaan maken";

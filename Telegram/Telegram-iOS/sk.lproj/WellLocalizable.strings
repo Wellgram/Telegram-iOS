@@ -57,3 +57,10 @@
 "NGLab.RegDate.Btn" = "Dátum registrácie";
 "NGLab.RegDate.Title" = "Dátum registrácie";
 "NGLab.RegDate.MenuItem" = "zaregistrovaný";
+
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "单聊开启自动翻译";
+"WGStrings.HandTranslate" = "单聊、群聊开启翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
+"WGStrings.CloseSingleAutoTranslate" = "关闭自动翻译";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";

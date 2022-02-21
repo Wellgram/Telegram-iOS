@@ -61,6 +61,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "بەردەست نییە لە نایسگرام لەبەر یاساکانی ئاپستۆر";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "单聊开启自动翻译";
+"WGStrings.HandTranslate" = "单聊、群聊开启翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
+"WGStrings.CloseSingleAutoTranslate" = "关闭自动翻译";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "تکایە «%1» بەکاربێنە بۆ گۆڕینی وێبگەڕی بنەڕەت";

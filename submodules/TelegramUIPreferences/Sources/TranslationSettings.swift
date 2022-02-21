@@ -2,12 +2,16 @@ import Foundation
 import Postbox
 import TelegramCore
 import SwiftSignalKit
-
+//定制-类修改
 public struct TranslationSettings: Codable, Equatable {
     public var showTranslate: Bool
     public var ignoredLanguages: [String]?
+    //定制-全局属性
+    ///自动翻译
     public var showWgAutoTranslate: Bool
+    ///手动翻译
     public var showWgHandTranslate: Bool
+    ///发送翻译
     public var showWgSendTranslate: Bool
     
     public static var defaultSettings: TranslationSettings {

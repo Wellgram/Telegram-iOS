@@ -66,7 +66,7 @@
 "WGStrings.HandTranslate" = "دردشة واحدة ، دردشة جماعية لبدء الترجمة";
 "WGStrings.SendTranslate" = "أرسل رسالة لفتح الترجمة";
 "WGStrings.CloseSingleAutoTranslate" = "قم بإيقاف تشغيل الترجمة الآلية";
-"WGStrings.OpenSingleAutoTranslate" = "قم بتشغيل الترجمة الآلية";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";
 
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
@@ -109,7 +109,7 @@
 "ManageFilters.Header" = "ضبط الفلاتر المتاحة";
 
 "Messages.Translate" = "ترجمة";
-"Messages.SendTranslate" = "إرسال";
+"Messages.SendTranslate" = "Send";
 "Messages.UndoTranslate" = "التراجع عن الترجمة";
 "Messages.TranslateError" = "عفوًا، الترجمة غير متوفرة.";
 

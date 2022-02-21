@@ -49,6 +49,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "Unavailable in Nicegram due to AppStore Guidelines";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "Povolit automatický překlad pro jeden chat";
+"WGStrings.HandTranslate" = "Jediný chat, skupinový chat pro zahájení překladu";
+"WGStrings.SendTranslate" = "Odesláním zprávy otevřete překlad";
+"WGStrings.CloseSingleAutoTranslate" = "Vypněte automatický překlad";
+"WGStrings.OpenSingleAutoTranslate" = "Zapněte automatický překlad";
+
 /*Browser*/
 "NiceFeatures.Browser.Header" = "URLs";
 "NiceFeatures.Browser.UseBrowser" = "Open links in browser";

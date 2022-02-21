@@ -61,6 +61,13 @@
 /*NGWeb*/
 "NGWeb.Blocked" = "AppStore 지침으로 인해 Nicegram 에서 사용할 수 없음";
 
+//定制-语言本地化
+"WGStrings.AutoTranslate" = "单聊开启自动翻译";
+"WGStrings.HandTranslate" = "单聊、群聊开启翻译";
+"WGStrings.SendTranslate" = "消息发送开启翻译";
+"WGStrings.CloseSingleAutoTranslate" = "关闭自动翻译";
+"WGStrings.OpenSingleAutoTranslate" = "开启自动翻译";
+
 /*Browser*/
 /*Please, Go to «Data & Storage» to configure default browser*/
 "NiceFeatures.Use.DataStorage" = "%1 을 사용하여 기본 브라우저를 설정 하세요";
@@ -103,17 +110,9 @@
 "ManageFilters.Header" = "사용 가능한 필터 구성";
 
 "Messages.Translate" = "번역";
-"Messages.SendTranslate" = "Send";
+"Messages.SendTranslate" = "보내다";
 "Messages.UndoTranslate" = "번역 취소";
 "Messages.TranslateError" = "죄송합니다. 번역 할 수 없습니다.";
-
-/*NG Lab Registration Date*/
-"NGLab.RegDate.Btn" = "등록 날짜 확인";
-"NGLab.RegDate.Title" = "등록 날짜";
-"NGLab.RegDate.Notice" = "이것은 대략적인 날짜입니다";
-"NGLab.RegDate.MenuItem" = "등록됨";
-"NGLab.RegDate.FetchError" = "죄송합니다. 등록일을 확인할 수 없습니다.";
-"NGLab.BadDeviceToken" = "[iOS 11+] 장치를 확인할 수 없습니다.";
 
 /*Backup Settings*/
 "NiceFeatures.BackupIcloud" = "iCloud 에 설정 및 폴더 동기화";
