@@ -706,7 +706,13 @@ private func settingsItems(data: PeerInfoScreenData?, context: AccountContext, p
         interaction.openSettings(.appearance)
     }))
     
-    let languageName = presentationData.strings.primaryComponent.localizedName
+    //定制-新增代码逻辑 简体中文和翻译中文语言包
+    var languageName = presentationData.strings.primaryComponent.localizedName
+    if languageName.contains("简体中文") {
+        languageName = "简体中文"
+    } else if languageName.contains("正體中文") {
+        languageName = "正體中文"
+    }
     items[.advanced]!.append(PeerInfoScreenDisclosureItem(id: 4, label: .text(languageName.isEmpty ? presentationData.strings.Localization_LanguageName : languageName), text: presentationData.strings.Settings_AppLanguage, icon: PresentationResourcesSettings.language, action: {
         interaction.openSettings(.language)
     }))
