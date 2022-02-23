@@ -3011,7 +3011,7 @@ func replayFinalState(
                 updatePeerPresences(transaction: transaction, accountPeerId: accountPeerId, peerPresences: presences)
             case let .UpdateSecretChat(chat, _):
                 updateSecretChat(encryptionProvider: encryptionProvider, accountPeerId: accountPeerId, transaction: transaction, mediaBox: mediaBox, chat: chat, requestData: nil)
-            case let .AddSecretMessages(messages)://定制-待完善 私密聊天需要添加自动翻译，还未开发
+            case let .AddSecretMessages(messages):
                 for message in messages {
                     let peerId = message.peerId
                     transaction.operationLogAddEntry(peerId: peerId, tag: OperationLogTags.SecretIncomingEncrypted, tagLocalIndex: .automatic, tagMergedIndex: .none, contents: SecretChatIncomingEncryptedOperation(message: message))

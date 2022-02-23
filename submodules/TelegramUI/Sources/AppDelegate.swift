@@ -1,7 +1,8 @@
 //定制-导入头文件
- import WGData
- import WGStrings
- //
+import WGData
+import WGStrings
+import WGTranslate
+//
 
 
 
@@ -920,6 +921,53 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                 return true
             })
             |> mapToSignal { context -> Signal<(AccountContext, CallListSettings)?, NoError> in
+                
+                //定制-新增代码逻辑 首次启动获取系统语言，并进行切换
+                if let context = context {
+                    let _ = (context.account.postbox.transaction { transaction -> Signal<(AccountContext?, LocalizationInfo?), NoError> in
+                        let state = transaction.getPreferencesEntry(key: PreferencesKeys.localizationListState)?.get(LocalizationListState.self)
+                        return context.sharedContext.accountManager.transaction { transaction -> (AccountContext?, LocalizationInfo?) in
+                            if let settings = transaction.getSharedData(SharedDataKeys.localizationSettings)?.get(LocalizationSettings.self), let state = state {
+                                //系统languageCode
+                                print(Locale.preferredLanguages)
+                                let sysLanguageCode = Locale.preferredLanguages.first ?? "en-US"
+                                //系统languageCode转成telegram语言包编码
+                                let sysTransferLanguageCode = getTelegramLowercasedLanguageCode(sysLanguageCode)
+                                //系统languageCode与APP的languageCode不一致，将App语言设置成系统语言
+                                if sysTransferLanguageCode != settings.primaryComponent.languageCode {
+                                    //遍历第三方语言包
+                                    for item in state.availableSavedLocalizations {
+                                        if sysTransferLanguageCode == item.languageCode {
+                                            return (context, item)
+                                        }
+                                    }
+                                    //遍历官方语言包
+                                    for item in state.availableOfficialLocalizations {
+                                        if sysTransferLanguageCode == item.languageCode {
+                                            return (context, item)
+                                        }
+                                    }
+                                }
+                            }
+                            return (nil, nil)
+                        }
+                    }
+                    |> switchToLatest
+                    |> deliverOnMainQueue).start(next: { context, info in
+                        //如果需要进行语言切换，继续往下执行
+                         if let info = info, let context = context {
+                             //设置本地语言
+                             let applyingCode = Promise<String?>(nil)
+                             let applyDisposable = MetaDisposable()
+                             
+                             applyingCode.set(.single(info.languageCode))
+                             applyDisposable.set((context.engine.localization.downloadAndApplyLocalization(accountManager: context.sharedContext.accountManager, languageCode: info.languageCode)
+                                 |> deliverOnMainQueue).start(completed: {
+                                     applyingCode.set(.single(nil))
+                                 }))
+                         }
+                    })
+                }
                 return sharedApplicationContext.sharedContext.accountManager.transaction { transaction -> CallListSettings? in
                     return transaction.getSharedData(ApplicationSpecificSharedDataKeys.callListSettings)?.get(CallListSettings.self)
                 }

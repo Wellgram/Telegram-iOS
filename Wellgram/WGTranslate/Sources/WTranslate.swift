@@ -65,6 +65,24 @@ public func getGoogleLang(_ userLang: String) -> String {
     return lang
 }
 
+///将iPhone的languageCode转成大写
+public func getTelegramLowercasedLanguageCode(_ userLang: String) -> String {
+    
+    var lang = userLang.lowercased()
+    let arr = lang.components(separatedBy: "-")
+    //代表国家编号的
+    let rawSuffix = "-" + (arr.last ?? "us")
+    if lang.hasSuffix(rawSuffix) {
+        lang = String(lang.dropLast(rawSuffix.count))
+    }
+    if lang == "zh-hans" {
+        lang = "zhcncc"
+    } else if lang == "zh-hant" {
+        lang = "taiwan"
+    }
+    return lang
+}
+
 
 public enum TranslateFetchError {
     case network
