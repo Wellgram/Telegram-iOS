@@ -921,7 +921,6 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
                 return true
             })
             |> mapToSignal { context -> Signal<(AccountContext, CallListSettings)?, NoError> in
-                
                 //定制-新增代码逻辑 首次启动获取系统语言，并进行切换
                 if let context = context {
                     let _ = (context.account.postbox.transaction { transaction -> Signal<(AccountContext?, LocalizationInfo?), NoError> in

@@ -3685,12 +3685,15 @@ func replayFinalState(
     return AccountReplayedFinalState(state: finalState, addedIncomingMessageIds: addedIncomingMessageIds, addedReactionEvents: addedReactionEvents, wasScheduledMessageIds: wasScheduledMessageIds, addedSecretMessageIds: addedSecretMessageIds, deletedMessageIds: deletedMessageIds, updatedTypingActivities: updatedTypingActivities, updatedWebpages: updatedWebpages, updatedCalls: updatedCalls, addedCallSignalingData: addedCallSignalingData, updatedGroupCallParticipants: updatedGroupCallParticipants, updatedPeersNearby: updatedPeersNearby, isContactUpdates: isContactUpdates, delayNotificatonsUntil: delayNotificatonsUntil, updatedIncomingThreadReadStates: updatedIncomingThreadReadStates, updatedOutgoingThreadReadStates: updatedOutgoingThreadReadStates)
 }
 
-//定制-新增函数 自动翻译transaction更新
+//定制-新增函数 自动翻译transaction更新，沙盒内有保存聊天窗口编号则可以自动翻译
 func autoTranslateTransaction(message: StoreMessage, isChat: Bool, accountManager: AccountManager<TelegramAccountManagerTypes>, postbox: Postbox) {
-    
+    guard let author = message.authorId else {
+        return
+    }
     let singleAutoTranslates = readSingleAutoTranslates()
-    let peer = "\(message.id.peerId)"
-    let isSingleAutoTranslate = singleAutoTranslates.contains(peer)
+    let peerIdStr = message.id.peerId.id.description
+    let sign = peerIdStr + "-" + author.id.description
+    let isSingleAutoTranslate = singleAutoTranslates.contains(sign)
     if !message.text.isEmpty && isChat && isSingleAutoTranslate {
         var isAutoTranslate = false
         var langCode = "en"

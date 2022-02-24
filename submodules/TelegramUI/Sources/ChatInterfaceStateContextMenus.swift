@@ -34,7 +34,6 @@ import Translate
 import WGData
 import WGStrings
 import WGTranslate
-import PeerInfoUI
 //
 
 private struct MessageContextMenuData {
@@ -1283,31 +1282,36 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
                 })))
             }
             
-            //FIXME: - Wellgram 开发中
             //定制-新增代码逻辑 开\关单窗口自动翻译,默认关闭
-            if translationSettings.showWgAutoTranslate {
-                //查看自动翻译列表
-                var singleAutoTranslates = readSingleAutoTranslates()
-//                if let case .Id(id) = message.id {
-//                    id.peerId.raw
-//                }
-                let peer = "\(message.id.peerId)"
-                let isContainAutoTranslate = singleAutoTranslates.contains(peer)//窗口某个值
-                let title = isContainAutoTranslate ? l("WGStrings.CloseSingleAutoTranslate", locale) : l("WGStrings.OpenSingleAutoTranslate", locale)
-                actions.append(.action(ContextMenuActionItem(text: title, icon: { theme in
-                    return generateTintedImage(image: UIImage(bundleImageName: "NGTranslateIcon"), color: theme.actionSheet.primaryTextColor)
-                }, action: { _, f in
-                    
-                    if isContainAutoTranslate {
-                        if let index = singleAutoTranslates.firstIndex(of: peer) {
-                            singleAutoTranslates.remove(at: index)
+            let isOpenAutoTranslate = translationSettings.showWgAutoTranslate
+            let isSurportSingleAutoTranslate = message.id.peerId.namespace == Namespaces.Peer.CloudUser || message.id.peerId.namespace == Namespaces.Peer.SecretChat
+            //判断是否打开自动翻译开关，判断是否当前窗口是否支持自动翻译功能
+            if isOpenAutoTranslate, isSurportSingleAutoTranslate {
+                //判断当前一条信息是否不是当前账号发送
+                let accountPeerIdValue = context.account.peerId.id.description
+                if let author = message.author, author.id.id.description != accountPeerIdValue {
+                    //满足以上条件，显示开关自动翻译的按钮
+                    var singleAutoTranslates = readSingleAutoTranslates()
+                    let peerIdStr = message.id.peerId.id.description
+                    let authorIdStr = author.id.id.description
+                    let signStr = peerIdStr + "-" + authorIdStr
+                    let isContainAutoTranslate = singleAutoTranslates.contains(signStr)//窗口某个值
+                    let title = isContainAutoTranslate ? l("WGStrings.CloseSingleAutoTranslate", locale) : l("WGStrings.OpenSingleAutoTranslate", locale)
+                    actions.append(.action(ContextMenuActionItem(text: title, icon: { theme in
+                        return generateTintedImage(image: UIImage(bundleImageName: "NGTranslateIcon"), color: theme.actionSheet.primaryTextColor)
+                    }, action: { _, f in
+                        
+                        if isContainAutoTranslate {
+                            if let index = singleAutoTranslates.firstIndex(of: signStr) {
+                                singleAutoTranslates.remove(at: index)
+                            }
+                        } else {
+                            singleAutoTranslates.append(signStr)
                         }
-                    } else {
-                        singleAutoTranslates.append(peer)
-                    }
-                    writeSingleAutoTranslates(value: singleAutoTranslates)
-                    f(.default)
-                })))
+                        writeSingleAutoTranslates(value: singleAutoTranslates)
+                        f(.default)
+                    })))
+                }
             }
             //
              
