@@ -68,6 +68,8 @@ import CalendarMessageScreen
 import ReactionSelectionNode
 import LottieMeshSwift
 import ReactionListContextMenuContent
+import LocalMediaResources
+import MtProtoKit
 
 #if DEBUG
 import os.signpost
@@ -5544,6 +5546,82 @@ public final class ChatControllerImpl: TelegramBaseController, ChatController, G
             self?.chatDisplayNode.historyNode.layoutActionOnViewTransition = ({ [weak self] transition in
                 f()
                 if let strongSelf = self, let validLayout = strongSelf.validLayout {
+                    //定制-待完善
+                    //定制-新增代码逻辑 发送端数据分析
+                    for insertItemIterator in transition.insertItems.makeIterator() {
+                        let chatMessageItem = insertItemIterator.item as? ChatMessageItem
+                        if let content = chatMessageItem?.content {
+                            for (message, _) in content.makeIterator() {
+                                
+                                //peerId，peer
+                                for (_, peer) in message.peers.makeIterator() {
+                                    print("to peerId: " + peer.id.id.description)
+                                    if let peer = peer as? TelegramGroup {//聊天群组
+                                        print("peer title: " + peer.title)
+                                    } else if let peer = peer as? TelegramUser {//单人聊天
+                                        let firstName = peer.firstName ?? ""
+                                        let lastName = peer.lastName ?? ""
+                                        let username = peer.username ?? ""
+                                        let phone = peer.phone ?? ""
+                                        print("peer firstName: " + firstName + "\npeer lastName: " + lastName + "\npeer username: ", username + "\npeer phone: " + phone)
+                                    } else if let peer = peer as? TelegramSecretChat {//私密聊天
+                                        let regularPeerId = peer.regularPeerId.id.description
+                                        print("peer regularPeerId: " + regularPeerId)
+                                    } else if let peer = peer as? TelegramChannel {//channel聊天
+                                        print("peer title: " + peer.title)
+                                    }
+                                }
+                                
+                                if let author = message.author, let peer = author as? TelegramUser, let username = peer.username {
+                                    let firstName = peer.firstName ?? ""
+                                    let lastName = peer.lastName ?? ""
+                                    print("\nauthor peerId: " + peer.id.id.description + "\npeer firstName: " + firstName + "\npeer lastName: " + lastName + "\npeer username: ", username)
+                                }
+                                
+                                //发送文本不为空
+                                if !message.text.isEmpty {
+                                    print("message.text: " + message.text)
+                                }
+                                
+                                //发送媒体
+                                if !message.media.isEmpty, !message.media.isEmpty {
+                                    for (_, media) in message.media.enumerated() {
+                                        if let media = media as? TelegramMediaFile {//TelegramMediaFile
+                                            if let resource = media.resource as? ICloudFileResource {//ICloudFileResource
+                                                if let urlData = Data(base64Encoded: resource.urlData) {
+                                                    var bookmarkDataIsStale = false
+                                                    if let url = try? URL(resolvingBookmarkData: urlData, bookmarkDataIsStale: &bookmarkDataIsStale) {
+                                                        print("ICloudFileResource: " + url.relativePath)
+                                                        if let data = try? Data(contentsOf: url) {
+                                                            print(data)
+//                                                            MTHttpRequestOperation(da
+//                                                            MTSignal *signal = [[[MTHttpRequestOperation dataForHttpUrl:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@/resolve?name=%@&type=16&random_padding=%@", host, isTesting ? @"tapv3.stel.com" : apvHost, makeRandomPadding()]] headers:headers] mapToSignal:^MTSignal *(MTHttpResponse *response)
+                                                        }
+                                                    }
+                                                }
+                                            } else if let resource = media.resource as? VideoLibraryMediaResource {//VideoLibraryMediaResource
+                                                print("VideoLibraryMediaResource: " + resource.localIdentifier)
+                                            } else if let resource = media.resource as? PhotoLibraryMediaResource {//PhotoLibraryMediaResource
+                                                print("PhotoLibraryMediaResource: " + resource.localIdentifier)
+                                            }
+                                        }
+//                                        else if let media = media as? TelegramMediaImage {//TelegramMediaImage
+////                                            for item in media.representations {
+////
+////                                            }
+//                                        }
+                                    }
+                                }
+                                
+                                //发送时间
+                                print("send date: " + Date(timeIntervalSince1970: TimeInterval(message.timestamp)).description)
+                                
+                                //
+                            }
+                        }
+                        print(insertItemIterator)
+                    }
+                    
                     var mappedTransition: (ChatHistoryListViewTransition, ListViewUpdateSizeAndInsets?)?
                     
                     let isScheduledMessages: Bool

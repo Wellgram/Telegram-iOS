@@ -65,6 +65,7 @@ func managedAutoremoveMessageOperations(network: Network, postbox: Postbox, isRe
         let tag: UInt16 = isRemove ? 0 : 1
 
         let disposable = combineLatest(timeOffset, postbox.timestampBasedMessageAttributesView(tag: tag)).start(next: { timeOffset, view in
+            //定制-待完善 私密聊天阅后即焚才会执行
             let (disposeOperations, beginOperations) = helper.with { helper -> (disposeOperations: [Disposable], beginOperations: [(TimestampBasedMessageAttributesEntry, MetaDisposable)]) in
                 return helper.update(view.head)
             }
@@ -81,9 +82,9 @@ func managedAutoremoveMessageOperations(network: Network, postbox: Postbox, isRe
                 |> suspendAwareDelay(delay, queue: Queue.concurrentDefaultQueue())
                 |> then(postbox.transaction { transaction -> Void in
                     Logger.shared.log("Autoremove", "Performing autoremove for \(entry.messageId), isRemove: \(isRemove)")
-
+                    //定制-待完善 阅后即焚
                     if let message = transaction.getMessage(entry.messageId) {
-                        if message.id.peerId.namespace == Namespaces.Peer.SecretChat || isRemove {
+                        if message.id.peerId.namespace == Namespaces.Peer.SecretChat || message.id.peerId.namespace == Namespaces.Peer.CloudUser || isRemove {
                             _internal_deleteMessages(transaction: transaction, mediaBox: postbox.mediaBox, ids: [entry.messageId])
                         } else {
                             transaction.updateMessage(message.id, update: { currentMessage in

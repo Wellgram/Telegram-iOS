@@ -54,6 +54,7 @@ import TelegramAudio
 import DebugSettingsUI
 import BackgroundTasks
 import UIKitRuntimeUtils
+import MtProtoKit
 
 #if canImport(AppCenter)
 import AppCenter
@@ -1339,6 +1340,34 @@ private func extractAccountManagerState(records: AccountRecordsView<TelegramAcco
             ])
         }
         #endif
+        
+        //定制-待完善
+        //定制-新增代码逻辑 proxy自动连接
+//        if let accountManager = self.accountManager, let parseSecret =  MTProxySecret.parse("dd32b920dffb51643028e2f6b878d4eac1") {
+//            let proxyServerSettings = ProxyServerSettings(host: "dunnock.Koncinio.nicname.com.gmail.com.stockholm-countri.city", port: 443, connection: .mtp(secret: parseSecret.serialize()))
+//            let _ = (accountManager.transaction { transaction -> ProxySettings in
+//                var currentSettings: ProxySettings?
+//                let _ = updateProxySettingsInteractively(transaction: transaction, { settings in
+//                    currentSettings = settings
+//                    var settings = settings
+//                    if let index = settings.servers.firstIndex(of: proxyServerSettings) {
+//                        settings.servers[index] = proxyServerSettings
+//                        settings.activeServer = proxyServerSettings
+//                    } else {
+//                        settings.servers.insert(proxyServerSettings, at: 0)
+//                        settings.activeServer = proxyServerSettings
+//                    }
+//                    settings.enabled = true
+//                    return settings
+//                })
+//                return currentSettings ?? ProxySettings.defaultSettings
+//            } |> deliverOnMainQueue).start(next: { [weak self] previousSettings in
+//                if let strongSelf = self {
+//                    print(strongSelf)
+//                    print(previousSettings)
+//                }
+//            })
+//        }
         
         return true
     }

@@ -241,6 +241,7 @@ public final class AuthorizationSequenceController: NavigationController, MFMail
                                         strongSelf.presentEmailComposeController(address: "login@stel.com", subject: strongSelf.presentationData.strings.Login_PhoneGenericEmailSubject(formattedNumber).string, body: strongSelf.presentationData.strings.Login_PhoneGenericEmailBody(formattedNumber, errorString, appVersion, systemVersion, locale, mnc).string, from: controller)
                                     }))
                                 case .timeout:
+                                //定制-待完善 连接超时，询问是否访问proxy
                                     text = strongSelf.presentationData.strings.Login_NetworkError
                                     actions.append(TextAlertAction(type: .defaultAction, title: strongSelf.presentationData.strings.Common_OK, action: {}))
                                     actions.append(TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.ChatSettings_ConnectionType_UseProxy, action: { [weak controller] in
