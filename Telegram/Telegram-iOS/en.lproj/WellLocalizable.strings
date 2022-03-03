@@ -26,7 +26,7 @@
 //定制-语言本地化
 /*翻译功能*/
 "WGStrings.AutoTranslate" = "Auto translate for chat";
-"WGStrings.HandTranslate" = "Manual translation for message";
+"WGStrings.HandTranslate" = "1Manual translation for message";
 "WGStrings.SendTranslate" = "Show translation when messaging";
 "WGStrings.CloseSingleAutoTranslate" = "Close auto translate";
 "WGStrings.OpenSingleAutoTranslate" = "Open auto translate";
